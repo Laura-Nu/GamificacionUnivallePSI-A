@@ -28,9 +28,8 @@ const Login = () => {
               </div>
 
               <div class="links">   
-                <a href="#">Forgot Password?</a> 
-                <a href="#">Sign-Up</a> 
-
+                <a >Forgot Password?</a> 
+                <a >Sign-Up</a> 
               </div>
 
               <div className="inputBox">
