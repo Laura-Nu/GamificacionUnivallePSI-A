@@ -21,11 +21,11 @@ import whatsapp from '../images/whatsapp.png';
 import logo from '../images/Logo.png';
 
 const images = [
-  { src: diamondImage, alt: 'Imagen 1', info: 'DIAMANTE: I: 6000, II: 6500, III: 7000', className: 'small' },
-  { src: platinumImage, alt: 'Imagen 2', info: 'PLATINO: I: 4500, II: 5000, III: 5500', className: 'small2' },
-  { src: goldImage, alt: 'Imagen 3', info: 'ORO: I: 3000, II: 3500, III: 4000', className: 'small3' },
-  { src: silverImage, alt: 'Imagen 4', info: 'PLATA: I: 1500, II: 2000, III: 2500', className: 'small4' },
-  { src: bronzeImage, alt: 'Imagen 5', info: 'BRONCE: I: 0, II: 500, III: 1000', className: 'small5' },
+  { src: diamondImage, alt: 'Diamante', info: 'DIAMANTE: I: 6000, II: 6500, III: 7000', className: 'small' },
+  { src: platinumImage, alt: 'Platino', info: 'PLATINO: I: 4500, II: 5000, III: 5500', className: 'small2' },
+  { src: goldImage, alt: 'Oro', info: 'ORO: I: 3000, II: 3500, III: 4000', className: 'small3' },
+  { src: silverImage, alt: 'Plata', info: 'PLATA: I: 1500, II: 2000, III: 2500', className: 'small4' },
+  { src: bronzeImage, alt: 'Bronce', info: 'BRONCE: I: 0, II: 500, III: 1000', className: 'small5' },
 ];
 
 function HomeStudent() {
@@ -109,7 +109,6 @@ function HomeStudent() {
           </a>
         </div>
       </div>
-
 
     </div>
   );
