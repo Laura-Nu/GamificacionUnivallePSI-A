@@ -10,9 +10,7 @@ function Badges() {
       <div className="d-flex justify-content-between p-2">
         <p className="text-start mx-3 fs-4">BADGES</p>
         <div className="d-flex">
-          <p className="text-end mx-3 fs-4">CERRAR SESIÓN</p>
-          <a href="/AddBadges" className="text-end mx-3 fs-4 App-link">AÑADIR BADGES</a>
-          <a href="/AddTemporalAdmin" className="text-end mx-3 fs-4 App-link">AÑADIR ADMIN TEMPORAL</a>
+          <a href="#" className="text-end mx-3 fs-4 App-link">CERRAR SESIÓN</a>
         </div>
       </div>
 
@@ -23,9 +21,7 @@ function Badges() {
             <img src={badgeImage} alt="Imagen 2" className="rounded-corner-img rounded-5 mx-5" />
           </div>
         </div>
-
       </header>
-
     </div>
   );
 }
