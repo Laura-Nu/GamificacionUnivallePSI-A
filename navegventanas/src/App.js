@@ -3,8 +3,6 @@ import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
 import HomeStudent from './StudentViews/HomeStudent';
 import Badges from './StudentViews/Badges';
-import AddBadges from './Controllers/AddBadge';
-import AddTemporalAdmin from './Controllers/AddTemporalAdmin';
 
 import CreateAcademicUnits from './AdminViews/AcademicUnits/Create';
 import UpdateAcademicUnits from './AdminViews/AcademicUnits/Update';
@@ -14,6 +12,7 @@ import CreateAdmin from './AdminViews/Admin/Create';
 import UpdateAdmin from './AdminViews/Admin/Update';
 import DeleteAdmin from './AdminViews/Admin/Delete';
 
+import AddBadgeToStudent from './AdminViews/Badges/AddToStudent';
 import CreateBadges from './AdminViews/Badges/Create';
 import UpdateBadges from './AdminViews/Badges/Update';
 import DeleteBadges from './AdminViews/Badges/Delete';
@@ -30,6 +29,11 @@ import CreateFaculties from './AdminViews/Faculties/Create';
 import UpdateFaculties from './AdminViews/Faculties/Update';
 import DeleteFaculties from './AdminViews/Faculties/Delete';
 
+import AddPenaltyToStudent from './AdminViews/Penalties/AddToStudent';
+import CreatePenalty from './AdminViews/Penalties/Create';
+import UpdatePenalty from './AdminViews/Penalties/Update';
+import DeletePenalty from './AdminViews/Penalties/Delete';
+
 import CreateStudent from './AdminViews/Students/Create';
 import UpdateStudent from './AdminViews/Students/Update';
 import DeleteStudent from './AdminViews/Students/Delete';
@@ -41,8 +45,6 @@ function App() {
         <Route path="/" element={<Login />} />
         <Route path="/HomeStudent" element={<HomeStudent />} />
         <Route path="/Badges" element={<Badges />} />
-        <Route path="/AddBadges" element={<AddBadges />} />
-        <Route path="/AddTemporalAdmin" element={<AddTemporalAdmin />} />
 
         <Route path="/CreateAcademicUnits" element={<CreateAcademicUnits />} />
         <Route path="/UpdateAcademicUnits" element={<UpdateAcademicUnits />} />
@@ -52,6 +54,7 @@ function App() {
         <Route path="/UpdateAdmin" element={<UpdateAdmin />} />
         <Route path="/DeleteAdmin" element={<DeleteAdmin />} />
 
+        <Route path="/AddBadgeToStudent" element={<AddBadgeToStudent />} />
         <Route path="/CreateBadges" element={<CreateBadges />} />
         <Route path="/UpdateBadges" element={<UpdateBadges />} />
         <Route path="/DeleteBadges" element={<DeleteBadges />} />
@@ -67,6 +70,11 @@ function App() {
         <Route path="/CreateFaculties" element={<CreateFaculties />} />
         <Route path="/UpdateFaculties" element={<UpdateFaculties />} />
         <Route path="/DeleteFaculties" element={<DeleteFaculties />} />
+
+        <Route path="/AddPenaltyToStudent" element={<AddPenaltyToStudent />} />
+        <Route path="/CreatePenalty" element={<CreatePenalty />} />
+        <Route path="/UpdatePenalty" element={<UpdatePenalty />} />
+        <Route path="/DeletePenalty" element={<DeletePenalty />} />
 
         <Route path="/CreateStudent" element={<CreateStudent />} />
         <Route path="/UpdateStudent" element={<UpdateStudent />} />
