@@ -1,0 +1,36 @@
+  h2 {
+    text-align: left;
+    margin-bottom: 10px;
+  }
+  
+  h4 {
+    text-align: left;
+    margin-bottom: 40px;
+  }
+  
+  .btn-primary {
+    margin-bottom: 40px;
+  }
+
+  .container {
+    margin-top: 20px;
+    position: relative;
+    margin-top: 50px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  }
+  
+  .btnAdd {
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin-top: 20px;
+    margin-right: 20px;
+    margin-bottom: 40px;
+  }
+  .side-bar {
+    display: flex;
+  }

@@ -7,14 +7,9 @@ const Login = () => {
   return (
     <Fragment>
       <section>
-        
-      
         <div className="signin">
-
           <div className="content">
-
             <h2>Sign In</h2>
-
             <div className="form">
 
               <div className="inputBox">
@@ -37,10 +32,6 @@ const Login = () => {
                 <input type="submit" value="Login" />
                 
               </div>
-
-            
-
-             
             </div>
 
           </div>
