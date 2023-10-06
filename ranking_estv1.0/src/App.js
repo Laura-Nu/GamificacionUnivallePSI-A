@@ -1,31 +1,80 @@
-import logo from './logo.svg';
-import './App.css';
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes } from 'react-router-dom';
 import Login from './Login';
-import Home from './Home';
-import Users from './Users';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import HomeStudent from './StudentViews/HomeStudent';
+import Badges from './StudentViews/Badges';
+import AddBadges from './Controllers/AddBadge';
+import AddTemporalAdmin from './Controllers/AddTemporalAdmin';
+
+import CreateAcademicUnits from './AdminViews/AcademicUnits/Create';
+import UpdateAcademicUnits from './AdminViews/AcademicUnits/Update';
+import DeleteAcademicUnits from './AdminViews/AcademicUnits/Delete';
+
+import CreateAdmin from './AdminViews/Admin/Create';
+import UpdateAdmin from './AdminViews/Admin/Update';
+import DeleteAdmin from './AdminViews/Admin/Delete';
+
+import CreateBadges from './AdminViews/Badges/Create';
+import UpdateBadges from './AdminViews/Badges/Update';
+import DeleteBadges from './AdminViews/Badges/Delete';
+
+import CreateCareers from './AdminViews/Careers/Create';
+import UpdateCareers from './AdminViews/Careers/Update';
+import DeleteCareers from './AdminViews/Careers/Delete';
+
+import CreateDepartments from './AdminViews/Departments/Create';
+import UpdateDepartments from './AdminViews/Departments/Update';
+import DeleteDepartments from './AdminViews/Departments/Delete';
+
+import CreateFaculties from './AdminViews/Faculties/Create';
+import UpdateFaculties from './AdminViews/Faculties/Update';
+import DeleteFaculties from './AdminViews/Faculties/Delete';
+
+import CreateStudent from './AdminViews/Students/Create';
+import UpdateStudent from './AdminViews/Students/Update';
+import DeleteStudent from './AdminViews/Students/Delete';
 
 function App() {
   return (
-    
-    <div className="App">
-      <BrowserRouter>
+    <Router>
+      <Routes>
+        <Route path="/" element={<Login />} />
+        <Route path="/HomeStudent" element={<HomeStudent />} />
+        <Route path="/Badges" element={<Badges />} />
+        <Route path="/AddBadges" element={<AddBadges />} />
+        <Route path="/AddTemporalAdmin" element={<AddTemporalAdmin />} />
 
-        <Routes>
+        <Route path="/CreateAcademicUnits" element={<CreateAcademicUnits />} />
+        <Route path="/UpdateAcademicUnits" element={<UpdateAcademicUnits />} />
+        <Route path="/DeleteAcademicUnits" element={<DeleteAcademicUnits />} />
 
-          <Route path="/
-          " element={<Login />} />
-  
-           <Route path="/home" element={<Home />} />
-  
-            <Route path="/users" element={<Users />} />
+        <Route path="/CreateAdmin" element={<CreateAdmin />} />
+        <Route path="/UpdateAdmin" element={<UpdateAdmin />} />
+        <Route path="/DeleteAdmin" element={<DeleteAdmin />} />
 
-        </Routes>
+        <Route path="/CreateBadges" element={<CreateBadges />} />
+        <Route path="/UpdateBadges" element={<UpdateBadges />} />
+        <Route path="/DeleteBadges" element={<DeleteBadges />} />
 
-      </BrowserRouter> 
-      
-    </div>
+        <Route path="/CreateCareers" element={<CreateCareers />} />
+        <Route path="/UpdateCareers" element={<UpdateCareers />} />
+        <Route path="/DeleteCareers" element={<DeleteCareers />} />
+
+        <Route path="/CreateDepartments" element={<CreateDepartments />} />
+        <Route path="/UpdateDepartments" element={<UpdateDepartments />} />
+        <Route path="/DeleteDepartments" element={<DeleteDepartments />} />
+
+        <Route path="/CreateFaculties" element={<CreateFaculties />} />
+        <Route path="/UpdateFaculties" element={<UpdateFaculties />} />
+        <Route path="/DeleteFaculties" element={<DeleteFaculties />} />
+
+        <Route path="/CreateStudent" element={<CreateStudent />} />
+        <Route path="/UpdateStudent" element={<UpdateStudent />} />
+        <Route path="/DeleteStudent" element={<DeleteStudent />} />
+      </Routes>
+    </Router>
   );
 }
- 
+
 export default App;
+
