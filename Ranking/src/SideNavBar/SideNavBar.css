@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+*{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+body{
+  min-height: 100vh;
+  background-size: cover;
+  background-position: center;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.side-bar{
+  background: #292A30;
+  backdrop-filter: blur(15px);
+  width: 260px;
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0; /* Cambiar de -100% a 0 */
+  overflow-y: auto;
+}
+
+
+
+.side-bar .menu{
+  width: 100%;
+  margin-top: 30px;
+}
+
+.side-bar .menu .item{
+  position: relative;
+  cursor: pointer;
+  text-align: left;
+}
+
+.side-bar .menu .item a{
+  color: #fff;
+  font-size: 16px;
+  text-decoration: none;
+  display: block;
+  padding: 8px 20px;
+  line-height: 60px;
+}
+
+.side-bar .menu .item a:hover{
+  background: #098929;
+  transition: 0.3s ease;
+}
+
+.side-bar .menu .item i{
+  margin-right: 10px;
+}
+
+.side-bar .menu .item a .dropdown{
+  position: absolute;
+  right: 0;
+  margin: 20px;
+  transition: 0.3s ease;
+}
+
+.side-bar .menu .item .sub-menu{
+  background: rgba(255, 255, 255, 0.1);
+  display: none;
+}
+
+.side-bar .menu .item .sub-menu a{
+  padding-left: 60px;
+}
+
+.rotate{
+  transform: rotate(90deg);
+}
+
+.close-btn {
+ display: none;
+}
+
+.menu-btn {
+  /* Eliminar la posición absoluta y el margen izquierdo */
+  color: #fff;
+  font-size: 20px;
+  margin: 15px;
+  cursor: pointer;
+}
+.menu-btn span {
+  font-size: 18px; /* Ajustar el tamaño de la fuente del título */
+  font-weight: bold;
+}
+
+.main{
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 50px;
+}
+
+.main h1{
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 60px;
+  text-align: center;
+  line-height: 80px;
+}
+
+@media (max-width: 900px){
+  .main h1{
+    font-size: 40px;
+    line-height: 60px;
+  }
+}
