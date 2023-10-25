@@ -21,7 +21,7 @@ function Create() {
   
     const newCareer = {
       careerName: careerName,
-      departmentId: parseInt(departmentId), // Asegúrate de convertir departmentId a entero
+      departmentId: parseInt(departmentId)
     };
 
     const response = await fetch('https://localhost:7103/api/Careers', {
@@ -31,12 +31,12 @@ function Create() {
       },
       body: JSON.stringify(newCareer),
     });
-
+    console.log(newCareer.careerName,newCareer.departmentId);
     if (response.ok) {
       window.alert('Carrera agregada con éxito');
       window.location.href = '/Careers';
     } else {
-      console.error('Error al agregar la carrera:', response.statusText);
+      console.error('Error al agregar la carrera:', await response.text());
     }
   };
 

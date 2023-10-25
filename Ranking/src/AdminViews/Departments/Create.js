@@ -36,7 +36,7 @@ function CreateDepartment() {
       window.alert('Departamento agregado con éxito');
       window.location.href = '/Departments';
     } else {
-      console.error('Error al agregar el departamento');
+      console.error('Error al agregar el departamento', await response.text());
     }
   };
 
