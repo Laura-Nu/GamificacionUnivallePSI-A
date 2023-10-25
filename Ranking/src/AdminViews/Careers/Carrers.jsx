@@ -1,51 +1,92 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../Styles/tables.css';
 
-function Carrers() {
+function Careers() {
+  const [careers, setCareers] = useState([]);
+  const [departments, setDepartments] = useState({});
+
+  useEffect(() => {
+    // Realiza una solicitud GET a la API para obtener la lista de carreras
+    fetch('https://localhost:7103/api/Careers')
+      .then((response) => response.json())
+      .then((data) => setCareers(data))
+      .catch((error) => console.error('Error fetching data: ', error));
+
+    // Realiza una solicitud GET a la API para obtener la lista de departamentos
+    fetch('https://localhost:7103/api/Departments')
+      .then((response) => response.json())
+      .then((data) => {
+        const departmentMap = {};
+        data.forEach((department) => {
+          departmentMap[department.departmentId] = department.departmentName;
+        });
+        setDepartments(departmentMap);
+      })
+      .catch((error) => console.error('Error fetching departments: ', error));
+  }, []);
+
+  const handleDelete = (careerId) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que quieres eliminar esta carrera?");
+    if (confirmDelete) {
+      // Realizar una solicitud DELETE para eliminar la carrera con el ID proporcionado
+      fetch(`https://localhost:7103/api/Careers/${careerId}`, {
+        method: 'DELETE',
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Si la eliminación es exitosa, actualiza la lista de carreras
+            setCareers((prevCareers) =>
+              prevCareers.filter((career) => career.careerId !== careerId)
+            );
+          } else {
+            console.error('Error al eliminar la carrera: ', response.statusText);
+          }
+        })
+        .catch((error) => console.error('Error al eliminar la carrera: ', error));
+    }
+  };
+
   return (
-    
     <div>
-     
-     <div className="container">
-      <div className="row">
-        <div className="col-12">
-          <h2 className="font-weight-bold">Careras</h2>
-          <h4>Lista de carreras</h4>
-          <a href='/CreateCarrers' className="btn btn-success mb-3 btnAdd">Añadir Carrera</a>
-          <table className="table table-responsive">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Rango</th>
-                <th>Puntaje</th>
-                <th>Carrera</th>
-                <th>Sede</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>Smith</td>
-                <td>Estudiante</td>
-                <td>90</td>
-                <td>Ingeniería</td>
-                <td>Sede A</td>
-                <td>
-                  <a href='/UpdateCareers' className="btn btn-sm btn-warning">Editar</a>
-                  <a href='/DeleteCareers' className="btn btn-sm btn-danger">Eliminar</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="container">
+        <div className="row">
+          <div className="col-12">
+            <h2 className="font-weight-bold">Carreras</h2>
+            <h4>Lista de carreras</h4>
+            <a href='/CreateCareers' className="btn btn-success mb-3 btnAdd">Añadir Carrera</a>
+            <table className="table table-responsive">
+              <thead>
+                <tr>
+                  <th>Nombre de la Carrera</th>
+                  <th>Departamento</th>
+                  <th>Fecha de Registro</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {careers.map((career) => (
+                  <tr key={career.careerId}>
+                    <td>{career.careerName}</td>
+                    <td>{departments[career.departmentId]}</td>
+                    <td>{career.registerDate}</td>
+                    <td>
+                      <a href={`/UpdateCareers/${career.careerId}`} className="btn btn-sm btn-warning">Editar</a>
+                      <button
+                        onClick={() => handleDelete(career.careerId)}
+                        className="btn btn-sm btn-danger"
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-   </div>
   );
 }
 
-export default Carrers;
+export default Careers;

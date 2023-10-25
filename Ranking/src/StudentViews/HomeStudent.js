@@ -58,17 +58,17 @@ function HomeStudent() {
         <br /><br />
 
         {/* Student Information*/}
-        <div class="row g-0 mt-5">
-          <div class="col-md-4 mt-4">
-            <img src={userImage} class="img-fluid rounded-start image-width rounded-circle mx-5" alt="..." />
+        <div className="row g-0 mt-5">
+          <div className="col-md-4 mt-4">
+            <img src={userImage} className="img-fluid rounded-start image-width rounded-circle mx-5" alt="..." />
             <p>JUAN PABLO PEREZ</p>
           </div>
-          <div class="col-md-8 card card-width rounded-pill mx-5">
-            <div class="card-body">
-              <p class="card-text fs-5">Rango: Plata II</p>
-              <p class="card-text fs-5">Cantidad total de puntos: X</p>
-              <p class="card-text fs-5">Puntos restantes para el siguiente nivel: Y</p>
-              <p class="card-text fs-5">Badges acumulados: 2</p>
+          <div className="col-md-8 card card-width rounded-pill mx-5">
+            <div className="card-body">
+              <p className="card-text fs-5">Rango: Plata II</p>
+              <p className="card-text fs-5">Cantidad total de puntos: X</p>
+              <p className="card-text fs-5">Puntos restantes para el siguiente nivel: Y</p>
+              <p className="card-text fs-5">Badges acumulados: 2</p>
             </div>
           </div>
         </div>
@@ -80,17 +80,17 @@ function HomeStudent() {
           <div className="col-md-3 mx-5">
             <img src={info3} alt="Imagen 1" className="img-fluid image-info m-3" />
             <h4>RANKING ESTUDIANTIL</h4>
-            <p class="fs-6">El ranking estudiantil es una carrera entre estudiantes para medir los logros que ganen en su etapa de estudio.</p>
+            <p className="fs-6">El ranking estudiantil es una carrera entre estudiantes para medir los logros que ganen en su etapa de estudio.</p>
           </div>
           <div className="col-md-3 mx-5">
             <img src={info1} alt="Imagen 2" className="img-fluid image-info m-3" />
             <h4>CÓMO SUBIR DE RANGO</h4>
-            <p class="fs-6">Se podrá subir de rango dependiende de los logros que gane y de las materias que apruebe.</p>
+            <p className="fs-6">Se podrá subir de rango dependiende de los logros que gane y de las materias que apruebe.</p>
           </div>
           <div className="col-md-3 mx-5">
             <img src={info4} alt="Imagen 3" className="img-fluid image-info m-3" />
             <h4>CÓMO PARTICIPO</h4>
-            <p class="fs-6">Cada estudiante inscripto participa iniciando en el rango más bajo.</p>
+            <p className="fs-6">Cada estudiante inscripto participa iniciando en el rango más bajo.</p>
           </div>
         </div>
       </header>

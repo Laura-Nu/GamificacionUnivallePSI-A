@@ -1,50 +1,76 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import '../../Styles/tables.css';
 
 function Facultys() {
+  const [faculties, setFaculties] = useState([]);
+
+  useEffect(() => {
+    // Realiza una solicitud GET a la API para obtener la lista de facultades
+    fetch('https://localhost:7103/api/Faculties')
+      .then((response) => response.json())
+      .then((data) => setFaculties(data))
+      .catch((error) => console.error('Error fetching data: ', error));
+  }, []);
+
+  const handleDelete = (facultyId) => {
+    const confirmDelete = window.confirm("¿Estás seguro de que quieres eliminar esta facultad?");
+    if (confirmDelete) {
+      // Realizar una solicitud DELETE para eliminar la facultad con el ID proporcionado
+      fetch(`https://localhost:7103/api/Faculties/${facultyId}`, {
+        method: 'DELETE',
+      })
+        .then((response) => {
+          if (response.ok) {
+            // Si la eliminación es exitosa, actualiza la lista de facultades
+            setFaculties((prevFaculties) =>
+              prevFaculties.filter((faculty) => faculty.facultyId !== facultyId)
+            );
+          } else {
+            console.error('Error al eliminar la facultad: ', response.statusText);
+          }
+        })
+        .catch((error) => console.error('Error al eliminar la facultad: ', error));
+    }
+  };
+
   return (
-    
     <div>
-     
-     <div className="container">
-      <div className="row">
-        <div className="col-12">
-          <h2 className="font-weight-bold">Facultades</h2>
-          <h4>Lista de facultades</h4>
-          <a href='/CreateFaculties' className="btn btn-success mb-3 btnAdd">Añadir Facultad</a>
-          <table className="table table-responsive">
-            <thead>
-              <tr>
-                <th>Nombre</th>
-                <th>Apellido Paterno</th>
-                <th>Apellido Materno</th>
-                <th>Rango</th>
-                <th>Puntaje</th>
-                <th>Carrera</th>
-                <th>Sede</th>
-                <th>Action</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td>John</td>
-                <td>Doe</td>
-                <td>Smith</td>
-                <td>Estudiante</td>
-                <td>90</td>
-                <td>Ingeniería</td>
-                <td>Sede A</td>
-                <td>
-                  <a href='/UpdateFaculties' className="btn btn-sm btn-warning">Editar</a>
-                  <a href='/DeleteFaculties' className="btn btn-sm btn-danger">Eliminar</a>
-                </td>
-              </tr>
-            </tbody>
-          </table>
+      <div className="container">
+        <div className="row">
+          <div className="col-12">
+            <h2 className="font-weight-bold">Facultades</h2>
+            <h4>Lista de facultades</h4>
+            <a href='/CreateFaculties' className="btn btn-success mb-3 btnAdd">Añadir Facultad</a>
+            <table className="table table-responsive">
+              <thead>
+                <tr>
+                  <th>Nombre de la Facultad</th>
+                  <th>Fecha de Registro</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {faculties.map((faculty) => (
+                  <tr key={faculty.facultyId}>
+                    <td>{faculty.facultyName}</td>
+                    <td>{faculty.registerDate}</td>
+                    <td>
+                      <a href={`/UpdateFaculties/${faculty.facultyId}`} className="btn btn-sm btn-warning">Editar</a>
+                      <button
+                        onClick={() => handleDelete(faculty.facultyId)}
+                        className="btn btn-sm btn-danger"
+                      >
+                        Eliminar
+                      </button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
-   </div>
   );
 }
 

@@ -75,7 +75,7 @@ function HomeAdmin() {
 
       <div className="d-flex justify-content-center align-items-center p-2" style={{ width: '100%' }}>
         <div className="d-flex justify-content-center align-items-center">
-          <a href='https://www.instagram.com/univalle_bolivia/' target='_blank'>
+          <a href='https://www.instagram.com/univalle_bolivia/' target="_blank">
             <img src={instagram} alt="Imagen 1" className="icon image" />
           </a>
           <a href='https://web.whatsapp.com/' target='_blank'>

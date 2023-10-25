@@ -35,7 +35,7 @@ function SideBar() {
           </Link>
         </div>
         <div className="item">
-          <Link to="/facultys" className="sub-btn">
+          <Link to="/faculties" className="sub-btn">
             <FontAwesomeIcon icon={faCogs} />
             Facultades
           </Link>
@@ -47,7 +47,7 @@ function SideBar() {
           </Link>
         </div>
         <div className="item">
-          <Link to="/carrers">
+          <Link to="/careers">
             <FontAwesomeIcon icon={faInfoCircle} />
             Carreras
           </Link>
