@@ -28,7 +28,9 @@ const images = [
   { src: bronzeImage, alt: 'Bronce', info: 'BRONCE: I: 0, II: 500, III: 1000', className: 'small5' },
 ];
 
-function HomeStudent() {
+function HomeStudent({location}) {
+  const userData = JSON.parse(sessionStorage.getItem('userData'));
+  const fullName = `${userData.firstName} ${userData.lastName} ${userData.secondLastName}`
   return (
     <div className="App bg-green">
       <div className="d-flex justify-content-between p-2">
@@ -61,12 +63,12 @@ function HomeStudent() {
         <div className="row g-0 mt-5">
           <div className="col-md-4 mt-4">
             <img src={userImage} className="img-fluid rounded-start image-width rounded-circle mx-5" alt="..." />
-            <p>JUAN PABLO PEREZ</p>
+            <p>{fullName}</p>
           </div>
           <div className="col-md-8 card card-width rounded-pill mx-5">
             <div className="card-body">
-              <p className="card-text fs-5">Rango: Plata II</p>
-              <p className="card-text fs-5">Cantidad total de puntos: X</p>
+              <p className="card-text fs-5">Rango: {userData.rank}</p>
+              <p className="card-text fs-5">Cantidad total de puntos: {userData.score}</p>
               <p className="card-text fs-5">Puntos restantes para el siguiente nivel: Y</p>
               <p className="card-text fs-5">Badges acumulados: 2</p>
             </div>
