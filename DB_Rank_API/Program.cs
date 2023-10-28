@@ -18,7 +18,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     .AddCookie(options =>
     {
         options.Cookie.Name = "DbRankAuthCookie";
-        // options.LoginPath = "/api/auth/login"; // Ajusta esta ruta según tu configuración.
+        options.LoginPath = "/api/auth/login"; // Ajusta esta ruta según tu configuración.
     });
 
 builder.Services.AddAuthorization();
@@ -30,7 +30,9 @@ builder.Services.AddCors(options =>
     {
         builder.WithOrigins("http://localhost:3000")
                .AllowAnyMethod()
-               .AllowAnyHeader();
+               .AllowAnyHeader()
+               .AllowCredentials(); 
+
     });
 });
 
