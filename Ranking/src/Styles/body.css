@@ -1,0 +1,103 @@
+/* Body.css */
+
+.body-home {
+    text-align: center;
+    background-color: #141D2B;
+    padding: 20px;
+    color: white;
+  }
+  
+  h1 {
+    font-size: 24px; /* Tamaño de fuente para el título INFORMACIÓN */
+  }
+  
+ /* Body.css */
+
+/* ... (otros estilos) */
+
+.image-pyramid {
+    display: flex;
+    flex-direction: column; /* Cambiamos la dirección a vertical y revertimos el orden */
+    align-items: center;
+  }
+  
+  /* Estilo para las imágenes en forma de pirámide */
+  .image-pyramid img {
+    width: 200px; /* Ajusta el tamaño según sea necesario */
+    height: 100px; /* Esto mantiene la relación de aspecto */
+    border-radius: 10px 10px 0px 0px; /* Border radius en las esquinas superiores */
+  }
+
+ 
+  /* Asigna las rutas de las imágenes de la pirámide */
+
+  
+  /* ... (otros estilos) */
+  
+  .horizontal-images {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px; /* Espacio entre las imágenes y el título */
+  }
+  .horizontal-images .contnedor-img1 {
+    width: 10px; /* Ancho del contenedor */
+    height: 10px; /* Alto del contenedor */
+    border-radius: 50%; 
+  }
+  
+  /* Estilo para las imágenes dentro de los contenedores */
+  .horizontal-images .image-container img {
+    width: 10px;
+    height: 10px;
+   
+  }
+  /* Estilo para las imágenes horizontales */
+.horizontal-images img {
+    width: 10px; /* Ajusta el tamaño según sea necesario */
+    height: 10px; /* Esto mantiene la relación de aspecto */
+  }
+  
+ 
+  /* Asigna las rutas de las imágenes horizontales */
+.left-image img {
+    content: url('../images/info_2.png');
+    width: 10px;
+    height: 10px;
+  }
+  
+  .center-image img {
+    content: url('../images/info_3.png');
+    width: 10px;
+    height: 10px;
+  }
+  
+  .right-image img {
+    content: url('../images/info_4.png');
+    width: 10px;
+    height: 10px;
+
+  }
+  /* Estilo para los párrafos debajo de las imágenes */
+  .horizontal-images p {
+    font-size: 14px; /* Tamaño de fuente para los párrafos */
+    margin-top: 10px; /* Espacio entre el texto y las imágenes */
+    text-align: center;
+    color: white;
+  }
+  
+  /* Estilos específicos para cada imagen horizontal */
+  .left-image {
+    text-align: left;
+  }
+  
+  .center-image {
+    text-align: center;
+  }
+  
+  .right-image {
+    text-align: right;
+  }
+  
+  .tituloP{
+    text-size-adjust: 64px;
+  }

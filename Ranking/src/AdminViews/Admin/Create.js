@@ -1,0 +1,182 @@
+import React, { useState, useEffect } from 'react';
+import 'bootstrap/dist/css/bootstrap.min.css';
+import '../../Styles/App.css';
+import info3 from '../../images/info_3.png';
+import DatePicker from 'react-datepicker';
+import 'react-datepicker/dist/react-datepicker.css';
+
+function Create() {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [secondLastName, setSecondLastName] = useState('');
+  const [academicUnityId, setAcademicUnityId] = useState('');
+  const [careerId, setCareerId] = useState('');
+  const [email, setEmail] = useState('');
+  const [expireDateAdmin, setExpireDateAdmin] = useState(null);
+  const [academicUnitOptions, setAcademicUnitOptions] = useState([]);
+  const [careerOptions, setCareerOptions] = useState([]);
+
+  useEffect(() => {
+    fetch('https://localhost:7103/api/AcademicUnities')
+      .then((response) => response.json())
+      .then((data) => setAcademicUnitOptions(data))
+      .catch((error) => console.error('Error fetching academic unities: ', error));
+
+    fetch('https://localhost:7103/api/Careers')
+      .then((response) => response.json())
+      .then((data) => setCareerOptions(data))
+      .catch((error) => console.error('Error fetching careers: ', error));
+  }, []);
+
+  const handleDateChange = (date) => {
+    setExpireDateAdmin(date);
+  };
+
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    const academicUnity = academicUnitOptions.find((unit) => unit.academicUnityName === academicUnityId);
+    const career = careerOptions.find((c) => c.careerName === careerId);
+
+    if (!academicUnity || !career) {
+      console.error('Unidad académica o carrera no encontrada');
+      return;
+    }
+
+    const newAdmin = {
+      firstName: firstName,
+      lastName: lastName,
+      secondLastName: secondLastName,
+      academicUnityId: academicUnity.academicUnityId,
+      careerId: career.careerId,
+      email: email,
+      status: 1,
+      role: 'Admin',
+      username: firstName,
+      password: 'pass',
+      expireDateAdmin: expireDateAdmin,
+    };
+
+    const response = await fetch('https://localhost:7103/api/User/create-user', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(newAdmin),
+    });
+
+    if (response.ok) {
+      window.alert('Administrador agregado con éxito');
+      window.location.href = '/Admins';
+    } else {
+      console.error('Error al agregar el administrador', await response.text());
+    }
+  };
+
+  return (
+    <div className="App bg-green">
+      <h2 className='mx-3 p-3'>Añadir Administradores</h2>
+      <div className="App-header d-block">
+        <div className='row mx-5 p-5'>
+          <form className='col-md-5 mx-5' onSubmit={handleSubmit}>
+            <div className="form-group">
+              <label htmlFor="firstName">Nombre:</label>
+              <input
+                required
+                type="text"
+                className="form-control border-success border-3 rounded-4"
+                id="firstName"
+                value={firstName}
+                onChange={(e) => setFirstName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="lastName" className="form-label">Primer Apellido:</label>
+              <input
+                required
+                type="text"
+                className="form-control border-success border-3 rounded-4"
+                id="lastName"
+                value={lastName}
+                onChange={(e) => setLastName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="secondLastName">Segundo Apellido:</label>
+              <input
+                type="text"
+                className="form-control border-success border-3 rounded-4"
+                id="secondLastName"
+                value={secondLastName}
+                onChange={(e) => setSecondLastName(e.target.value)}
+              />
+            </div>
+            <div>
+              <label htmlFor="academicUnityId">Unidad Académica</label>
+              <select
+                required
+                className="form-select border-success border-3 rounded-4"
+                aria-label="Selecciona una Unidad Académica"
+                id="academicUnityId"
+                value={academicUnityId}
+                onChange={(e) => setAcademicUnityId(e.target.value)}
+              >
+                <option value="" disabled>Selecciona una opción</option>
+                {academicUnitOptions.map((option) => (
+                  <option key={option.academicUnityId} value={option.academicUnityName}>
+                    {option.academicUnityName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="careerId">Carrera</label>
+              <select
+                required
+                className="form-select border-success border-3 rounded-4"
+                aria-label="Selecciona una Carrera"
+                id="careerId"
+                value={careerId}
+                onChange={(e) => setCareerId(e.target.value)}
+              >
+                <option value="" disabled>Selecciona una opción</option>
+                {careerOptions.map((option) => (
+                  <option key={option.careerId} value={option.careerName}>
+                    {option.careerName}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div className="form-group">
+              <label htmlFor="email">Email:</label>
+              <input
+                required
+                type="email"
+                id="email"
+                name="email"
+                className="form-control border-success border-3 rounded-4"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="expireDateAdmin">Fecha:</label>
+              <DatePicker
+                selected={expireDateAdmin}
+                dateFormat="dd/MM/yyyy"
+                onChange={handleDateChange}
+                className="form-control border-success border-3 rounded-4"
+              />
+            </div>
+            <button type="submit" className="btn btn-success mt-5 fs-3">Añadir Administrador</button>
+          </form>
+          <div className='col-md-6 d-flex justify-content-center align-items-center'>
+            <img src={info3} alt="Imagen 1" className="img-fluid mx-5 image-width" />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+export default Create;
