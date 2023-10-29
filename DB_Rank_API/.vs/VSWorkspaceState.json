@@ -1,7 +1,15 @@
 {
   "ExpandedNodes": [
+<<<<<<< HEAD
     ""
   ],
   "SelectedNode": "\\Program.cs",
+=======
+    "",
+    "\\Controllers",
+    "\\Models"
+  ],
+  "SelectedNode": "\\Models\\Badge.cs",
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
   "PreviewInSolutionExplorer": false
 }

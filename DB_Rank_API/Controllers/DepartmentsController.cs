@@ -1,4 +1,4 @@
-﻿using System;
+﻿susing System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -59,7 +59,14 @@ namespace DB_Rank_API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(department).State = EntityState.Modified;
+            var existingDepartment = await _context.Departments.FindAsync(id);
+
+            if (existingDepartment != null)
+            {
+                department.RegisterDate = existingDepartment.RegisterDate;
+                department.Status = existingDepartment.Status;
+                _context.Entry(existingDepartment).CurrentValues.SetValues(department);
+            }
 
             try
             {

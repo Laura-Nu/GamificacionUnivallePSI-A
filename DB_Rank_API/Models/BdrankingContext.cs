@@ -25,17 +25,28 @@ public partial class BdrankingContext : DbContext
 
     public virtual DbSet<Person> People { get; set; }
 
+<<<<<<< HEAD
     public virtual DbSet<Professor> Professors { get; set; }
 
+=======
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
     public virtual DbSet<Project> Projects { get; set; }
 
     public virtual DbSet<Sanction> Sanctions { get; set; }
 
     public virtual DbSet<Student> Students { get; set; }
 
+<<<<<<< HEAD
     protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
         => optionsBuilder.UseSqlServer("Data Source=ZEDSKANPC;Initial Catalog=BDRanking;TrustServerCertificate=True;Integrated Security=True");
+=======
+    public virtual DbSet<Badge> Badges { get; set; }
+
+    protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
+#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+        => optionsBuilder.UseSqlServer("Data Source=DESKTOP-JQCSPOV\\SQLEXPRESS;Initial Catalog=BDRanking;TrustServerCertificate=True;Integrated Security=True");
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -101,6 +112,7 @@ public partial class BdrankingContext : DbContext
             entity.HasOne(d => d.Career).WithMany(p => p.People).HasForeignKey(d => d.CareerId);
         });
 
+<<<<<<< HEAD
         modelBuilder.Entity<Professor>(entity =>
         {
             entity.HasKey(e => e.PersonId);
@@ -114,6 +126,8 @@ public partial class BdrankingContext : DbContext
             entity.HasOne(d => d.Person).WithOne(p => p.Professor).HasForeignKey<Professor>(d => d.PersonId);
         });
 
+=======
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
         modelBuilder.Entity<Project>(entity =>
         {
             entity.HasKey(e => e.ProjectsId);
@@ -127,11 +141,16 @@ public partial class BdrankingContext : DbContext
             entity.Property(e => e.StudentPersonId).HasColumnName("StudentPersonID");
             entity.Property(e => e.StudentsId).HasColumnName("StudentsID");
 
+<<<<<<< HEAD
             entity.HasOne(d => d.StudentPerson).WithMany(p => p.Projects).HasForeignKey(d => d.StudentPersonId);
+=======
+            //entity.HasOne(d => d.StudentPerson).WithMany(p => p.Projects).HasForeignKey(d => d.StudentPersonId);
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
         });
 
         modelBuilder.Entity<Sanction>(entity =>
         {
+<<<<<<< HEAD
             entity.HasKey(e => e.SanctionsId);
 
             entity.HasIndex(e => e.StudentPersonId, "IX_Sanctions_StudentPersonID");
@@ -143,6 +162,14 @@ public partial class BdrankingContext : DbContext
             entity.Property(e => e.StudentsId).HasColumnName("StudentsID");
 
             entity.HasOne(d => d.StudentPerson).WithMany(p => p.Sanctions).HasForeignKey(d => d.StudentPersonId);
+=======
+            entity.HasKey(e => e.SanctionId);
+            entity.ToTable("Sanction");
+            entity.Property(e => e.SanctionId).HasColumnName("SanctionID");
+            entity.Property(e => e.SanctionName).HasMaxLength(60);
+            entity.Property(e => e.Description).HasMaxLength(150);
+            entity.Property(e => e.Punctuation).HasColumnName("punctuation");
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
         });
 
         modelBuilder.Entity<Student>(entity =>
@@ -154,10 +181,25 @@ public partial class BdrankingContext : DbContext
             entity.Property(e => e.PersonId)
                 .ValueGeneratedNever()
                 .HasColumnName("PersonID");
+<<<<<<< HEAD
 
             entity.HasOne(d => d.Person).WithOne(p => p.Student).HasForeignKey<Student>(d => d.PersonId);
         });
 
+=======
+            entity.Property(e => e.Rank).HasMaxLength(50);
+            entity.HasOne(d => d.Person).WithOne(p => p.Student).HasForeignKey<Student>(d => d.PersonId);
+        });
+
+        modelBuilder.Entity<Badge>(entity =>
+        {
+            entity.HasKey(e => e.BadgeId);
+            entity.ToTable("Badge");
+            entity.Property(e => e.BadgeId).HasColumnName("BadgeID");
+            entity.Property(e => e.BadgeName).HasMaxLength(50);
+        });
+
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
         OnModelCreatingPartial(modelBuilder);
     }
 

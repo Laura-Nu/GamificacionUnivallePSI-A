@@ -59,7 +59,14 @@ namespace DB_Rank_API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(career).State = EntityState.Modified;
+            var existingCareer = await _context.Careers.FindAsync(id);
+
+            if (existingCareer != null)
+            {
+                career.RegisterDate = existingCareer.RegisterDate;
+                career.Status = existingCareer.Status;
+                _context.Entry(existingCareer).CurrentValues.SetValues(career);
+            }
 
             try
             {

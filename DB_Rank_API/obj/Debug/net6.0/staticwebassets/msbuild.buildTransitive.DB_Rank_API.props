@@ -1,3 +1,8 @@
+<<<<<<< HEAD
 ﻿<Project>
   <Import Project="..\buildMultiTargeting\DB_Rank_API.props" />
+=======
+﻿<Project>
+  <Import Project="..\buildMultiTargeting\DB_Rank_API.props" />
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
 </Project>

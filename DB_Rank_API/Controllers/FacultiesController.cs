@@ -59,7 +59,14 @@ namespace DB_Rank_API.Controllers
                 return BadRequest();
             }
 
-            _context.Entry(faculty).State = EntityState.Modified;
+            var existingFaculty = await _context.Faculties.FindAsync(id);
+
+            if (existingFaculty != null)
+            {
+                faculty.RegisterDate = existingFaculty.RegisterDate;
+                faculty.Status = existingFaculty.Status;
+                _context.Entry(existingFaculty).CurrentValues.SetValues(faculty);
+            }
 
             try
             {

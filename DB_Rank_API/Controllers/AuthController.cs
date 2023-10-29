@@ -22,11 +22,18 @@ namespace DB_Rank_API.Controllers
         {
             _dbContext = dbContext;
         }
+<<<<<<< HEAD
         //EndPoint para  la autenteicacion y  genearicon del token
+=======
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
 
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
+<<<<<<< HEAD
+=======
+            // Realiza la validación de las credenciales del usuario en tu base de datos.
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
             var user = await _dbContext.People.SingleOrDefaultAsync(p => p.Username == request.Username);
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
@@ -35,12 +42,21 @@ namespace DB_Rank_API.Controllers
             }
 
             var claims = new List<Claim>
+<<<<<<< HEAD
     {
         new Claim(ClaimTypes.Name, user.Username),
         new Claim(ClaimTypes.Email, user.Email),
         new Claim(ClaimTypes.NameIdentifier, user.PersonId.ToString()), // Utiliza PersonId como identificador
         new Claim(ClaimTypes.Role, user.Role)
     };
+=======
+            {
+                new Claim(ClaimTypes.Name, user.Username),
+                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(ClaimTypes.NameIdentifier, user.PersonId.ToString()),
+                new Claim(ClaimTypes.Role, user.Role)
+            };
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
 
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
@@ -62,6 +78,10 @@ namespace DB_Rank_API.Controllers
                 }
             });
         }
+<<<<<<< HEAD
+=======
+
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
         // Método para obtener la información del usuario
         [Authorize] // Requiere autenticación
         [HttpGet("getdata")]
@@ -92,7 +112,11 @@ namespace DB_Rank_API.Controllers
 
             return BadRequest("Usuario no encontrado");
         }
+<<<<<<< HEAD
         private byte? GetStudentRank(int userId)
+=======
+        private string? GetStudentRank(int userId)
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
         {
             var student = _dbContext.Students.FirstOrDefault(s => s.PersonId == userId);
             if (student != null)
@@ -101,7 +125,11 @@ namespace DB_Rank_API.Controllers
             }
             return null;
         }
+<<<<<<< HEAD
        
+=======
+
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {

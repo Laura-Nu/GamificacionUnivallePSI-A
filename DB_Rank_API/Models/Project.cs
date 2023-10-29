@@ -15,9 +15,15 @@ public partial class Project
 
     public double Punctuation { get; set; }
 
+<<<<<<< HEAD
     public byte Status { get; set; }
 
     public DateTime RegisterDate { get; set; }
+=======
+    public byte Status { get; set; } = 1;
+
+    public DateTime RegisterDate { get; set; } = DateTime.Now;
+>>>>>>> d9636ecf7913d59cd514eb63c5cc84923d70a99b
 
     public int? StudentPersonId { get; set; }
 

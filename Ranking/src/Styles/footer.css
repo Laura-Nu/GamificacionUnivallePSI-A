@@ -1,0 +1,41 @@
+/* Footer.css */
+
+.footer {
+    background-color: #292A30;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    color: white;
+    padding: 10px 20px;
+  }
+  
+  .contact-button {
+    font-size: 16px;
+    background-color: transparent;
+    border: none;
+    color: white;
+    cursor: pointer;
+    flex: 1; /* Ocupar todo el espacio restante en el footer */
+  }
+  
+  .social-icons {
+    display: flex;
+    justify-content: center; /* Centrar los íconos horizontalmente */
+    align-items: center;
+    flex: 1; /* Ocupar todo el espacio restante en el footer */
+  }
+  
+  /* Estilos para los botones de redes sociales */
+  .facebook-button,
+  .instagram-button,
+  .whatsapp-button {
+    background-color: transparent;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    margin: 0 10px; /* Separación entre los botones de redes sociales */
+  }
+  
+  /* Estilos adicionales según tus necesidades */
+  

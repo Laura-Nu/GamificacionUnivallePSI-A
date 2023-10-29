@@ -1,0 +1,115 @@
+/* Diseño general*/
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  text-decoration:none;
+  color: white;
+}
+
+.App-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.bg-green{
+  background-color: #098929;
+  color: white;
+}
+
+.popup{
+  color:black;
+}
+
+/* Piramide*/
+.image-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra las imágenes horizontalmente */
+  border-top-left-radius: 30px; /* Esquina superior izquierda redondeada */
+  border-top-right-radius: 30px; /* Esquina superior izquierda redondeada */
+}
+
+.image {
+  max-width: 100%; /* Asegura que las imágenes no se desborden del contenedor */
+  height: auto; /* Mantiene la relación de aspecto original de las imágenes */
+  transition: transform 0.3s ease-in-out; /* Agrega una transición suave al hacer hover */
+}
+
+.border{
+  border-top-left-radius: 20px; /* Esquina superior izquierda redondeada */
+  border-top-right-radius: 20px; /* Esquina superior izquierda redondeada */
+}
+
+.small {
+  width: 80px; /* Establece el tamaño de la primera imagen */
+  height: 40px; 
+}
+
+.small2 {
+  width: 130px; 
+  height: 45px; 
+}
+
+.small3 {
+  width: 180px; 
+  height: 50px; 
+}
+
+.small4 {
+  width: 230px; 
+  height: 55px; 
+}
+
+.small5 {
+  width: 280px; 
+  height: 60px; 
+}
+/* Estilo para agrandar imágenes al hacer hover */
+.image:hover {
+  transform: scale(1.1); /* Aumenta el tamaño en un 10% al hacer hover */
+}
+
+.card-width{
+  max-width: 500px;
+  overflow: hidden;
+  max-height: 250px;
+}
+
+.image-width{
+  max-width: 40%;
+  height: auto;
+}
+
+.image-info{
+  max-width: 20%;
+  height: auto;
+}
+
+.icon{
+  max-width: 8%;
+  height: auto;
+}
+
+.rounded-corner-img {
+  width: 40%; 
+}
+
+.logo{
+  width: 5%;
+}
