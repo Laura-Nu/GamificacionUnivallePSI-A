@@ -1,19 +1,34 @@
 import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Styles/App.css';
 import info3 from '../../images/info_3.png';
 
-function Update() {
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [secondLastName, setSecondLastName] = useState('');
-  const [academicUnityId, setAcademicUnityId] = useState('');
-  const [careerId, setCareerId] = useState('');
-  const [email, setEmail] = useState('');
+function UpdateStudent() {
+  const { id } = useParams();
+  const [studentData, setStudentData] = useState({
+    firstName: '',
+    lastName: '',
+    secondLastName: '',
+    academicUnityId: '',
+    careerId: '',
+    email: '',
+    student:{
+      rank: '',
+      score: '',
+    }
+  });
   const [academicUnitOptions, setAcademicUnitOptions] = useState([]);
   const [careerOptions, setCareerOptions] = useState([]);
 
   useEffect(() => {
+    fetch(`https://localhost:7103/api/People/${id}`)
+      .then((response) => response.json())
+      .then((data) => {
+        setStudentData(data);
+      })
+      .catch((error) => console.error('Error fetching student data: ', error));
+
     fetch('https://localhost:7103/api/AcademicUnities')
       .then((response) => response.json())
       .then((data) => setAcademicUnitOptions(data))
@@ -23,29 +38,14 @@ function Update() {
       .then((response) => response.json())
       .then((data) => setCareerOptions(data))
       .catch((error) => console.error('Error fetching careers: ', error));
-  }, []);
+  }, [id]);
 
-  const handleUpdate = async (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
-    const academicUnity = academicUnitOptions.find((unit) => unit.academicUnityName === academicUnityId);
-    const career = careerOptions.find((c) => c.careerName === careerId);
+    const updatedStudent = { ...studentData };
 
-    if (!academicUnity || !career) {
-      console.error('Unidad académica o carrera no encontrada');
-      return;
-    }
-
-    const updatedStudent = {
-      firstName: firstName,
-      lastName: lastName,
-      secondLastName: secondLastName,
-      academicUnityId: academicUnity.academicUnityId,
-      careerId: career.careerId,
-      email: email,
-    };
-
-    const response = await fetch('https://localhost:7103/api/Students/update-student', {
+    const response = await fetch(`https://localhost:7103/api/People/${id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -66,70 +66,69 @@ function Update() {
       <h2 className='mx-3 p-3'>Actualizar Estudiante</h2>
       <div className="App-header d-block">
         <div className='row mx-5 p-5'>
-          <form className='col-md-5 mx-5' onSubmit={handleUpdate}>
+          <form className='col-md-5 mx-5' onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="firstName">Nombre:</label>
               <input
-                required
-                type="text"
                 className="form-control border-success border-3 rounded-4"
+                type="text"
                 id="firstName"
-                value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                name="firstName"
+                value={studentData.firstName}
+                onChange={(e) => setStudentData({ ...studentData, firstName: e.target.value })}
               />
             </div>
-            <div>
-              <label htmlFor="lastName" className="form-label">Primer Apellido:</label>
+            <div className="form-group">
+              <label htmlFor="lastName">Primer Apellido:</label>
               <input
-                required
-                type="text"
                 className="form-control border-success border-3 rounded-4"
+                type="text"
                 id="lastName"
-                value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                name="lastName"
+                value={studentData.lastName}
+                onChange={(e) => setStudentData({ ...studentData, lastName: e.target.value })}
               />
             </div>
-            <div>
+            <div className="form-group">
               <label htmlFor="secondLastName">Segundo Apellido:</label>
               <input
-                type="text"
                 className="form-control border-success border-3 rounded-4"
+                type="text"
                 id="secondLastName"
-                value={secondLastName}
-                onChange={(e) => setSecondLastName(e.target.value)}
+                name="secondLastName"
+                value={studentData.secondLastName}
+                onChange={(e) => setStudentData({ ...studentData, secondLastName: e.target.value })}
               />
             </div>
-            <div>
+            <div className="form-group">
               <label htmlFor="academicUnityId">Unidad Académica</label>
               <select
-                required
                 className="form-select border-success border-3 rounded-4"
-                aria-label="Selecciona una Unidad Académica"
                 id="academicUnityId"
-                value={academicUnityId}
-                onChange={(e) => setAcademicUnityId(e.target.value)}
+                name="academicUnityId"
+                value={studentData.academicUnityId}
+                onChange={(e) => setStudentData({ ...studentData, academicUnityId: e.target.value })}
               >
                 <option value="" disabled>Selecciona una opción</option>
                 {academicUnitOptions.map((option) => (
-                  <option key={option.academicUnityId} value={option.academicUnityName}>
+                  <option key={option.academicUnityId} value={option.academicUnityId}>
                     {option.academicUnityName}
                   </option>
                 ))}
               </select>
             </div>
-            <div>
+            <div className="form-group">
               <label htmlFor="careerId">Carrera</label>
               <select
-                required
                 className="form-select border-success border-3 rounded-4"
-                aria-label="Selecciona una Carrera"
                 id="careerId"
-                value={careerId}
-                onChange={(e) => setCareerId(e.target.value)}
+                name="careerId"
+                value={studentData.careerId}
+                onChange={(e) => setStudentData({ ...studentData, careerId: e.target.value })}
               >
                 <option value="" disabled>Selecciona una opción</option>
                 {careerOptions.map((option) => (
-                  <option key={option.careerId} value={option.careerName}>
+                  <option key={option.careerId} value={option.careerId}>
                     {option.careerName}
                   </option>
                 ))}
@@ -138,13 +137,34 @@ function Update() {
             <div className="form-group">
               <label htmlFor="email">Email:</label>
               <input
-                required
+                className="form-control border-success border-3 rounded-4"
                 type="email"
                 id="email"
                 name="email"
+                value={studentData.email}
+                onChange={(e) => setStudentData({ ...studentData, email: e.target.value })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="rank">Rango:</label>
+              <input
                 className="form-control border-success border-3 rounded-4"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                type="text"
+                id="rank"
+                name="rank"
+                value={studentData.student.rank}
+                onChange={(e) => setStudentData({ ...studentData, student: { ...studentData.student, rank: e.target.value } })}
+              />
+            </div>
+            <div className="form-group">
+              <label htmlFor="score">Puntaje:</label>
+              <input
+                className="form-control border-success border-3 rounded-4"
+                type="number"
+                id="score"
+                name="score"
+                value={studentData.student.score}
+                onChange={(e) => setStudentData({ ...studentData, student: { ...studentData.student, score: e.target.value } })}
               />
             </div>
             <button type="submit" className="btn btn-success mt-5 fs-3">Actualizar Estudiante</button>
@@ -158,4 +178,4 @@ function Update() {
   );
 }
 
-export default Update;
+export default UpdateStudent;

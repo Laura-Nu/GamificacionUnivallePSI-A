@@ -27,6 +27,20 @@ const images = [
 ];
 
 function HomeAdmin() {
+  const handleLogout = async () => {
+    try {
+        const response = await fetch('https://localhost:7103/api/auth/logout', {
+            method: 'POST',
+        });
+        if (response.ok) {
+            window.location.href = '/';
+        } else {
+            console.error('Error al cerrar sesión');
+        }
+    } catch (error) {
+        console.error('Error al cerrar sesión', error);
+    }
+  };
   return (
     <div className="App bg-green">
       <div className="d-flex justify-content-between p-2">
@@ -36,7 +50,7 @@ function HomeAdmin() {
         </div>
         <div className="d-flex">
           <a href="/Students" className="text-end mx-3 fs-4 App-link">EDITAR</a>
-          <a href="#" className="text-end mx-3 fs-4 App-link">CERRAR SESIÓN</a>
+          <a href="#" className="text-end mx-3 fs-4 App-link" onClick={handleLogout}>CERRAR SESIÓN</a>
         </div>
       </div>
 

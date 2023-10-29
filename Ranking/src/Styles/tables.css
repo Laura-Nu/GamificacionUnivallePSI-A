@@ -34,3 +34,8 @@
   .side-bar {
     display: flex;
   }
+
+  .thumbnail-cell {
+    width: 100px; /* Establece el ancho deseado para la miniatura */
+    height: 100px; /* Establece la altura deseada para la miniatura */
+  }

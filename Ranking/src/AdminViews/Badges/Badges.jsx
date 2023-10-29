@@ -29,7 +29,6 @@ function Badges() {
         .catch((error) => console.error('Error al eliminar la insignia: ', error));
     }
   };
-
   return (
     <div>
       <div className="container">
@@ -41,10 +40,8 @@ function Badges() {
             <table className="table table-responsive">
               <thead>
                 <tr>
-                  <th>ID de Insignia</th>
                   <th>Nombre</th>
                   <th>Imagen</th>
-                  <th>Estado</th>
                   <th>Fecha de Registro</th>
                   <th>Acción</th>
                 </tr>
@@ -52,12 +49,10 @@ function Badges() {
               <tbody>
                 {badges.map((badge) => (
                   <tr key={badge.badgeId}>
-                    <td>{badge.badgeId}</td>
                     <td>{badge.badgeName}</td>
-                    <td>
-                      <img src={badge.image} alt="Badge Image" width="50" height="50" />
+                    <td className="thumbnail-cell">
+                      <img src={`https://localhost:7103/api/Images/${badge.image}`} alt="Badge Image" width="50" height="50" />
                     </td>
-                    <td>{badge.status}</td>
                     <td>{badge.registerDate}</td>
                     <td>
                       <a href={`/UpdateBadges/${badge.badgeId}`} className="btn btn-sm btn-warning">Editar</a>

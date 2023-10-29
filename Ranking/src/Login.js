@@ -1,9 +1,10 @@
 import React from 'react';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Styles/App.css';
 
-
 function Login() {
+
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -16,20 +17,23 @@ function Login() {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ username, password}),
+      body: JSON.stringify({ username, password }),
     });
 
     if (response.ok) {
       const data = await response.json();
-      if (data.role === 'Student'){
+      if (data.user.role === 'Student') {
+        // Almacena los datos del usuario en sessionStorage
+        sessionStorage.setItem('userData', JSON.stringify(data.user));
         window.location.href = '/HomeStudent';
-      }
-      else if (data.role === 'Admin'){
+      } else if (data.user.role === 'Admin') {
+        // Almacena los datos del usuario en sessionStorage
+        sessionStorage.setItem('userData', JSON.stringify(data.user));
         window.location.href = '/HomeAdmin';
       }
+      
       console.log('Autenticación exitosa');
     } else {
-      // Manejar errores de autenticación
       console.error('Error en la autenticación');
       window.alert('Usuario o contraseña incorrectos');
     }
@@ -42,7 +46,7 @@ function Login() {
         <div className="col-md-2 card bg-dark rounded-5 p-4 mt-3">
           <div className="card-body">
             <form onSubmit={handleSubmit}>
-            <div className="mb-3 text-start fs-5">
+              <div className="mb-3 text-start fs-5">
                 <label htmlFor="exampleInputusername1" className="form-label text-white">User</label>
                 <input type="text" className="form-control" name="username" aria-describedby="emailHelp" />
               </div>

@@ -47,6 +47,7 @@ function Create() {
       role: 'Student',
       username: firstName,
       password: 'pass',
+
     };
 
     const response = await fetch('https://localhost:7103/api/User/create-user', {
