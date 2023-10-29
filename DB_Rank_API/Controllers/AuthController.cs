@@ -8,6 +8,7 @@ using System.Security.Cryptography;
 using Microsoft.EntityFrameworkCore;
 using System.Text;
 using BCrypt.Net;
+using Microsoft.AspNetCore.Authorization;
 
 namespace DB_Rank_API.Controllers
 {
@@ -28,30 +29,78 @@ namespace DB_Rank_API.Controllers
             // Realiza la validación de las credenciales del usuario en tu base de datos.
             var user = await _dbContext.People.SingleOrDefaultAsync(p => p.Username == request.Username);
 
-            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password)) // Utiliza BCrypt.Verify para verificar la contraseña
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
                 return BadRequest(new { message = "Credenciales inválidas" });
             }
 
-            // Crea las claims (información del usuario) que deseas incluir en el token.
-            var claims = new[]
+            var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, user.Role),
-                // Agrega más claims según sea necesario.
+                new Claim(ClaimTypes.NameIdentifier, user.PersonId.ToString()),
+                new Claim(ClaimTypes.Role, user.Role)
             };
 
-            // Crea la identidad del usuario.
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-
-            // Crea el principal del usuario.
             var principal = new ClaimsPrincipal(identity);
 
-            // Autentica al usuario y emite una cookie de autenticación.
             await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
 
-            return Ok(new { message = "Inicio de sesión exitoso", role = user.Role });
+            return Ok(new
+            {
+                message = "Inicio de sesión exitoso",
+                user = new
+                {
+                    Username = user.Username,
+                    FirstName = user.FirstName,
+                    LastName = user.LastName,
+                    SecondLastName = user.SecondLastName,
+                    Role = user.Role, // Esto se basa en el Claim anterior
+                    Rank = GetStudentRank(user.PersonId),
+                    Score = user.Student?.Score
+                }
+            });
+        }
+
+        // Método para obtener la información del usuario
+        [Authorize] // Requiere autenticación
+        [HttpGet("getdata")]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var username = User.Identity.Name; // Username
+            var role = User.FindFirst(ClaimTypes.Role)?.Value; // Rol
+            var userId = int.Parse(User.FindFirst("UserId")?.Value);
+
+            // Consulta la base de datos para obtener información adicional del usuario
+            var userd = _dbContext.People.FirstOrDefault(p => p.PersonId == userId);
+
+            if (userd != null)
+            {
+                var userInfo = new
+                {
+                    Username = username,
+                    FirstName = userd.FirstName, // Nombre
+                    LastName = userd.LastName, // Apellido
+                    SecondLastName = userd.SecondLastName, // Segundo apellido
+                    Role = role,
+                    Rank = (role == "Student") ? GetStudentRank(userId) : null, // Rango (solo si el usuario es un estudiante)
+                    Score = (role == "Student") ? userd.Student?.Score : null, // Puntaje (solo si el usuario es un estudiante)
+                };
+
+                return Ok(userInfo);
+            }
+
+            return BadRequest("Usuario no encontrado");
+        }
+        private string? GetStudentRank(int userId)
+        {
+            var student = _dbContext.Students.FirstOrDefault(s => s.PersonId == userId);
+            if (student != null)
+            {
+                return student.Rank;
+            }
+            return null;
         }
 
         [HttpPost("logout")]

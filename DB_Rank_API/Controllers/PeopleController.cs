@@ -25,10 +25,12 @@ namespace DB_Rank_API.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Person>>> GetPeople()
         {
-          if (_context.People == null)
-          {
+            var studentData = _context.People.Include(p => p.Student).ToList();
+
+            if (_context.People == null)
+            {
               return NotFound();
-          }
+            }
             return await _context.People.ToListAsync();
         }
 
@@ -36,10 +38,12 @@ namespace DB_Rank_API.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Person>> GetPerson(int id)
         {
-          if (_context.People == null)
-          {
+            var studentData = _context.People.Include(p => p.Student).FirstOrDefault(p => p.PersonId == id);
+            
+           if (_context.People == null)
+           {
               return NotFound();
-          }
+           }
             var person = await _context.People.FindAsync(id);
 
             if (person == null)
@@ -52,9 +56,12 @@ namespace DB_Rank_API.Controllers
 
         // PUT: api/People/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
+        /*
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPerson(int id, Person person)
         {
+            var studentData = _context.People.Include(p => p.Student).FirstOrDefault(p => p.PersonId == id);
+
             if (id != person.PersonId)
             {
                 return BadRequest();
@@ -87,6 +94,66 @@ namespace DB_Rank_API.Controllers
 
             return NoContent();
         }
+        */
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutPerson(int id, Person updatedPerson)
+        {
+            if (id != updatedPerson.PersonId)
+            {
+                return BadRequest();
+            }
+
+            var existingPerson = await _context.People
+                .Include(p => p.Student) // Asegúrate de incluir la relación con Student
+                .FirstOrDefaultAsync(p => p.PersonId == id);
+
+            if (existingPerson == null)
+            {
+                return NotFound();
+            }
+
+            // Actualiza los campos de Person
+            existingPerson.FirstName = updatedPerson.FirstName;
+            existingPerson.LastName = updatedPerson.LastName;
+            existingPerson.SecondLastName = updatedPerson.SecondLastName;
+            // ... otros campos de Person
+
+            // Actualiza los campos de Student
+            if (existingPerson.Student != null)
+            {
+                existingPerson.Student.Rank = updatedPerson.Student.Rank;
+                existingPerson.Student.Score = updatedPerson.Student.Score;
+            }
+            else
+            {
+                // Si Student es nulo, puedes crear una nueva instancia
+                existingPerson.Student = new Student
+                {
+                    Rank = updatedPerson.Student.Rank,
+                    Score = updatedPerson.Student.Score
+                };
+            }
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!PersonExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
 
         // POST: api/People
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
@@ -103,7 +170,6 @@ namespace DB_Rank_API.Controllers
             return CreatedAtAction("GetPerson", new { id = person.PersonId }, person);
         }
 
-        
 
         // DELETE: api/People/5
         [HttpDelete("{id}")]

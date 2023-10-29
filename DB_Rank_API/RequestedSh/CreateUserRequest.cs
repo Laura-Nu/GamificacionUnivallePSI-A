@@ -1,6 +1,4 @@
-﻿using DB_Rank_API.Models;
-
-namespace DB_Rank_API.RequestedSh
+﻿namespace DB_Rank_API.RequestedSh
 {
     public class CreateUserRequest
     {
@@ -17,10 +15,16 @@ namespace DB_Rank_API.RequestedSh
         public string Password { get; set; }
         public DateTime? ExpireDateAdmin { get; set; }
         // Propiedades adicionales para las relaciones 1 a 1 (Student, Professor, etc.)
-        public Student? Student { get; set; }
+        public StudentRequest? Student { get; set; }
 
         // Otras propiedades para las relaciones 1 a 1 si es necesario
+    }
 
+    public class StudentRequest
+    {
+        public string Rank { get; set; } = null!;
+        public int Score { get; set; }
 
+        // Otras propiedades para Student si es necesario
     }
 }

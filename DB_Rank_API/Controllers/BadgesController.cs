@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -89,7 +90,7 @@ namespace DB_Rank_API.Controllers
 
         // POST: api/Badges
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-         [HttpPost]
+        [HttpPost]
         public async Task<ActionResult<Badge>> PostBadge(Badge badge)
         {
             if (_context.Badges == null)
@@ -101,6 +102,7 @@ namespace DB_Rank_API.Controllers
 
             return CreatedAtAction("GetBadge", new { id = badge.BadgeId }, badge);
         }
+
 
         // DELETE: api/Badges/5
         [HttpDelete("{id}")]

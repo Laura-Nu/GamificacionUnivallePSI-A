@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.Json.Serialization;
 
 namespace DB_Rank_API.Models;
 
@@ -11,9 +12,10 @@ public partial class Student
 
     public int Score { get; set; }
 
-    //public virtual Person Person { get; set; } = null!;
+    [JsonIgnore]
+    public virtual Person? Person { get; set; }
 
-    public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+    //public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 
     //public virtual ICollection<Sanction> Sanctions { get; set; } = new List<Sanction>();
 }

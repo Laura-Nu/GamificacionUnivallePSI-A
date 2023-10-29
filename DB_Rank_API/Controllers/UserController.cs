@@ -21,7 +21,7 @@ namespace DB_Rank_API.Controllers
 
         // POST: api/User
         [HttpPost("create-user")]
-        public async Task<IActionResult> CreateUser(CreateUserRequest request)
+        public async Task<IActionResult> CreateUser([FromBody] CreateUserRequest request)
         {
             if (ModelState.IsValid)
             {
@@ -42,16 +42,13 @@ namespace DB_Rank_API.Controllers
                         Username = request.Username,
                         ExpireDateAdmin = request.ExpireDateAdmin,
 
-                        // Cifra la contraseña utilizando bcrypt
                         Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
-
 
                         Student = new Student
                         {
                             Rank = "Bronce",
                             Score = 0
                         },
-                        //Professor = new Professor()
                     };
                 }
                 else
@@ -74,21 +71,17 @@ namespace DB_Rank_API.Controllers
                         Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
                     };
                 }
-                
+
                 _context.People.Add(newUser);
                 await _context.SaveChangesAsync();
 
-                // Configura las opciones de serialización JSON para manejar referencias circulares
                 var jsonSerializerOptions = new JsonSerializerOptions
                 {
                     ReferenceHandler = ReferenceHandler.Preserve,
-                    // Otras opciones personalizadas si es necesario
                 };
 
-                // Serializa el objeto newUser a JSON
                 var jsonUser = JsonSerializer.Serialize(newUser, jsonSerializerOptions);
 
-                // Regresa el JSON serializado en la respuesta
                 return Ok(new { message = "Usuario creado con éxito", user = jsonUser });
             }
 

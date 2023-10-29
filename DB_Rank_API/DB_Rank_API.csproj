@@ -21,6 +21,7 @@
 
   <ItemGroup>
     <Folder Include="Models\API\" />
+    <Folder Include="ImagesBadges\" />
   </ItemGroup>
 
 </Project>

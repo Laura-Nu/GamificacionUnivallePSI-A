@@ -6,7 +6,7 @@
 
         public string BadgeName { get; set; } = null!;
 
-        public byte[] Image { get; set; } = null!;
+        public string Image { get; set; } = null!;
 
         public byte Status { get; set; } = 1;
 

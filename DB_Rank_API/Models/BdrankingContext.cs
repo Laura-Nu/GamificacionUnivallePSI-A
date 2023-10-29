@@ -114,7 +114,7 @@ public partial class BdrankingContext : DbContext
             entity.Property(e => e.StudentPersonId).HasColumnName("StudentPersonID");
             entity.Property(e => e.StudentsId).HasColumnName("StudentsID");
 
-            entity.HasOne(d => d.StudentPerson).WithMany(p => p.Projects).HasForeignKey(d => d.StudentPersonId);
+            //entity.HasOne(d => d.StudentPerson).WithMany(p => p.Projects).HasForeignKey(d => d.StudentPersonId);
         });
 
         modelBuilder.Entity<Sanction>(entity =>
@@ -137,7 +137,7 @@ public partial class BdrankingContext : DbContext
                 .ValueGeneratedNever()
                 .HasColumnName("PersonID");
             entity.Property(e => e.Rank).HasMaxLength(50);
-            //entity.HasOne(d => d.Person).WithOne(p => p.Student).HasForeignKey<Student>(d => d.PersonId);
+            entity.HasOne(d => d.Person).WithOne(p => p.Student).HasForeignKey<Student>(d => d.PersonId);
         });
 
         modelBuilder.Entity<Badge>(entity =>
