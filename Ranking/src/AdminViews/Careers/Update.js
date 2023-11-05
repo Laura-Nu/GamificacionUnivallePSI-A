@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Styles/App.css';
@@ -6,41 +7,77 @@ import info3 from '../../images/info_3.png';
 
 function Update() {
   const { id } = useParams();
-  const [careerName, setCareerName] = useState(''); // Estado para el nombre de la carrera
-  const [departmentId, setDepartmentId] = useState(''); // Estado para el ID del departamento
-
-  const [departments, setDepartments] = useState([]); // Estado para almacenar la lista de departamentos
+  const [careerName, setCareerName] = useState('');
+  const [departmentId, setDepartmentId] = useState('');
+  const [showInfoModal, setShowInfoModal] = useState(false);
+  const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
-    // Realiza una solicitud GET para obtener los detalles de la carrera por su ID
     fetch(`https://localhost:7103/api/Careers/${id}`)
       .then((response) => response.json())
       .then((data) => {
-        // Establece los datos en los estados locales
         setCareerName(data.careerName);
         setDepartmentId(data.departmentId);
       })
       .catch((error) => console.error('Error fetching data: ', error));
 
-    // Realizar una solicitud GET a la API para obtener la lista de departamentos
     fetch('https://localhost:7103/api/Departments')
       .then((response) => response.json())
-      .then((data) => setDepartments(data))
+      .then((data) => setDepartments(data.filter(department => department.status === 1)))
       .catch((error) => console.error('Error fetching departments: ', error));
-  }, [id]); // Ejecuta esta carga inicial cuando cambia el ID en la URL
+  }, [id]);
+
+  const handleShowInfoModal = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleCloseInfoModal = () => {
+    setShowInfoModal(false);
+    window.location.href = '/Careers';
+  };
+
+  // Función para registrar una auditoría de actualización
+  const createAuditLog = async (originalData, updatedData) => {
+    const careerAuditData = {
+      careerId: id,
+      oldCareerName: originalData.careerName,
+      actualCareerName: updatedData.careerName,
+      oldDepartmentId: originalData.departmentId,
+      actualDepartmentId: updatedData.departmentId,
+      action: 'Update',
+      userID: JSON.parse(sessionStorage.userData).userId,
+    };
+
+    try {
+      const response = await fetch('https://localhost:7103/api/CareerAudits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(careerAuditData),
+      });
+
+      if (!response.ok) {
+        console.error('Error al agregar CareerAudit');
+      }
+    } catch (error) {
+      console.error('Error al registrar la auditoría: ', error);
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
 
-    // Crea un objeto con los datos a actualizar
+    // Obtén los datos actuales de la carrera antes de la actualización
+    const responseBeforeUpdate = await fetch(`https://localhost:7103/api/Careers/${id}`);
+    const dataBeforeUpdate = await responseBeforeUpdate.json();
+
     const updatedData = {
       careerId: id,
       careerName: careerName,
       departmentId: departmentId,
-      // Agrega otros campos aquí si es necesario
     };
 
-    // Realiza una solicitud PUT para actualizar la carrera
     const response = await fetch(`https://localhost:7103/api/Careers/${updatedData.careerId}`, {
       method: 'PUT',
       headers: {
@@ -50,8 +87,14 @@ function Update() {
     });
 
     if (response.ok) {
-      window.alert('Carrera actualizada con éxito');
-      window.location.href = '/Careers';
+      // Obtén los datos actualizados de la carrera después de la actualización
+      const responseAfterUpdate = await fetch(`https://localhost:7103/api/Careers/${id}`);
+      const dataAfterUpdate = await responseAfterUpdate.json();
+
+      // Registra una auditoría de actualización
+      createAuditLog(dataBeforeUpdate, dataAfterUpdate);
+
+      handleShowInfoModal();
     } else {
       console.error('Error al actualizar la carrera');
     }
@@ -59,26 +102,24 @@ function Update() {
 
   return (
     <div className="App bg-green">
-      <h2 className='mx-3 p-3'>Actualizar Carreras</h2>
+      <h2 className='p-2 text-center font-weight-bold'>Actualizar Carreras</h2>
       <div className="App-header d-block">
         <div className='row mx-5 p-5'>
           <form className='col-md-5 mx-5' onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="careerName">Nombre de la carrera:</label>
-              <input
-                required
+              <input required
                 type="text"
                 className="form-control"
                 id="careerName"
-                value={careerName} // Muestra el nombre actual
+                value={careerName}
                 onChange={(e) => setCareerName(e.target.value)}
               />
             </div>
 
             <div className="form-group">
               <label htmlFor="departmentId">Departamento:</label>
-              <select
-                required
+              <select required
                 className="form-control"
                 id="departmentId"
                 value={departmentId}
@@ -101,6 +142,20 @@ function Update() {
           </div>
         </div>
       </div>
+
+      <Modal show={showInfoModal} onHide={handleCloseInfoModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Información</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Carrera actualizada con éxito.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleCloseInfoModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

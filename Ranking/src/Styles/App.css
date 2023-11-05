@@ -113,3 +113,33 @@
 .logo{
   width: 5%;
 }
+
+.card-width {
+  background-color: #f0f0f0;
+  border: 1px solid #ccc;
+}
+
+.card-width:hover {
+  background-color: rgb(95, 177, 94);
+  box-shadow: 5px 5px 10px #4b8150;
+}
+
+.p-text {
+  color: #fffefe;
+}
+
+.p-text:hover {
+  color: #3ab246;
+}
+
+.badge-image {
+  transition: transform 0.3s;
+}
+
+.badge-image:hover {
+  transform: scale(1.1);
+}
+
+.hidden {
+  display: none;
+}
