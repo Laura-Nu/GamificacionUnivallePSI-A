@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Button, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Styles/App.css';
 import info3 from '../../images/info_3.png';
@@ -13,10 +14,12 @@ function Update() {
   const [secondLastName, setSecondLastName] = useState('');
   const [academicUnityId, setAcademicUnityId] = useState('');
   const [careerId, setCareerId] = useState('');
+  const [expireDateAdmin, setExpireDateAdmin] = useState(null); // Valor por defecto para la fecha
   const [email, setEmail] = useState('');
-  const [expireDateAdmin, setExpireDateAdmin] = useState(null);
+  const [selectedRole, setSelectedRole] = useState('');
   const [academicUnitOptions, setAcademicUnitOptions] = useState([]);
   const [careerOptions, setCareerOptions] = useState([]);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     fetch(`https://localhost:7103/api/People/${id}`)
@@ -28,6 +31,7 @@ function Update() {
         setAcademicUnityId(data.academicUnityId.toString());
         setCareerId(data.careerId.toString());
         setEmail(data.email);
+        setSelectedRole(data.role);
         setExpireDateAdmin(data.expireDateAdmin ? new Date(data.expireDateAdmin) : null);
       })
       .catch((error) => console.error('Error fetching data: ', error));
@@ -45,8 +49,22 @@ function Update() {
 
   const handleDateChange = (date) => {
     setExpireDateAdmin(date);
+    console.log(date);
   };
 
+  const handleShowInfoModal = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleCloseInfoModal = () => {
+    setShowInfoModal(false);
+    window.location.href = '/Admins';
+  };
+
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value);
+  };
+  
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -58,9 +76,7 @@ function Update() {
       academicUnityId: academicUnityId,
       careerId: careerId,
       email: email,
-      role: 'Admin',
-      username: firstName,
-      password: firstName,
+      role: selectedRole,
       expireDateAdmin: expireDateAdmin,
     };
 
@@ -73,23 +89,29 @@ function Update() {
     });
 
     if (response.ok) {
-      window.alert('Administrador actualizado con éxito');
-      window.location.href = '/Admins';
+      handleShowInfoModal();
     } else {
       console.error('Error al actualizar el administrador', await response.text());
     }
   };
 
+  // Filtra las opciones de Academic Units y Careers
+  const filteredAcademicUnitOptions = academicUnitOptions.filter(
+    (option) => option.status === 1
+  );
+  const filteredCareerOptions = careerOptions.filter(
+    (option) => option.status === 1
+  );
+
   return (
     <div className="App bg-green">
-      <h2 className='mx-3 p-3'>Actualizar Administradores</h2>
+      <h2 className='p-2 text-center font-weight-bold'>Actualizar Administradores</h2>
       <div className="App-header d-block">
         <div className='row mx-5 p-5'>
           <form className='col-md-5 mx-5' onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="firstName">Nombre:</label>
-              <input
-                required
+              <input required
                 type="text"
                 className="form-control border-success border-3 rounded-4"
                 id="firstName"
@@ -97,10 +119,9 @@ function Update() {
                 onChange={(e) => setFirstName(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="lastName" className="form-label">Primer Apellido:</label>
-              <input
-                required
+            <div className="form-group">
+              <label htmlFor="lastName">Primer Apellido:</label>
+              <input required
                 type="text"
                 className="form-control border-success border-3 rounded-4"
                 id="lastName"
@@ -108,7 +129,7 @@ function Update() {
                 onChange={(e) => setLastName(e.target.value)}
               />
             </div>
-            <div>
+            <div className="form-group">
               <label htmlFor="secondLastName">Segundo Apellido:</label>
               <input
                 type="text"
@@ -118,28 +139,26 @@ function Update() {
                 onChange={(e) => setSecondLastName(e.target.value)}
               />
             </div>
-            <div>
-              <label htmlFor="academicUnityId">Unidad Académica</label>
-              <select
-                required
+            <div className="form-group">
+              <label htmlFor="academicUnityId">Sede</label>
+              <select required
                 className="form-select border-success border-3 rounded-4"
-                aria-label="Selecciona una Unidad Académica"
+                aria-label="Selecciona una Sede"
                 id="academicUnityId"
                 value={academicUnityId}
                 onChange={(e) => setAcademicUnityId(e.target.value)}
               >
                 <option value="" disabled>Selecciona una opción</option>
-                {academicUnitOptions.map((option) => (
+                {filteredAcademicUnitOptions.map((option) => (
                   <option key={option.academicUnityId} value={option.academicUnityId.toString()}>
                     {option.academicUnityName}
                   </option>
                 ))}
               </select>
             </div>
-            <div>
+            <div className="form-group">
               <label htmlFor="careerId">Carrera</label>
-              <select
-                required
+              <select required
                 className="form-select border-success border-3 rounded-4"
                 aria-label="Selecciona una Carrera"
                 id="careerId"
@@ -147,7 +166,7 @@ function Update() {
                 onChange={(e) => setCareerId(e.target.value)}
               >
                 <option value="" disabled>Selecciona una opción</option>
-                {careerOptions.map((option) => (
+                {filteredCareerOptions.map((option) => (
                   <option key={option.careerId} value={option.careerId.toString()}>
                     {option.careerName}
                   </option>
@@ -155,16 +174,18 @@ function Update() {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="email">Email:</label>
-              <input
-                required
-                type="email"
-                id="email"
-                name="email"
-                className="form-control border-success border-3 rounded-4"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <label htmlFor="role">Rol:</label>
+              <select required
+                className="form-select border-success border-3 rounded-4"
+                aria-label="Selecciona un rol"
+                id="role"
+                value={selectedRole}
+                onChange={handleRoleChange}
+              >
+                <option value="">Selecciona un rol</option>
+                <option value="Admin">Admin</option>
+                <option value="Master">Master</option>
+              </select>
             </div>
             <div className="form-group">
               <label htmlFor="expireDateAdmin">Fecha:</label>
@@ -182,6 +203,20 @@ function Update() {
           </div>
         </div>
       </div>
+
+      <Modal show={showInfoModal} onHide={handleCloseInfoModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Información</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Administrador actualizado con éxito.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleCloseInfoModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

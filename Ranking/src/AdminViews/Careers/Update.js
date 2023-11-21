@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Styles/App.css';
@@ -8,7 +9,7 @@ function Update() {
   const { id } = useParams();
   const [careerName, setCareerName] = useState('');
   const [departmentId, setDepartmentId] = useState('');
-
+  const [showInfoModal, setShowInfoModal] = useState(false);
   const [departments, setDepartments] = useState([]);
 
   useEffect(() => {
@@ -22,12 +23,54 @@ function Update() {
 
     fetch('https://localhost:7103/api/Departments')
       .then((response) => response.json())
-      .then((data) => setDepartments(data))
+      .then((data) => setDepartments(data.filter(department => department.status === 1)))
       .catch((error) => console.error('Error fetching departments: ', error));
   }, [id]);
 
+  const handleShowInfoModal = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleCloseInfoModal = () => {
+    setShowInfoModal(false);
+    window.location.href = '/Careers';
+  };
+
+  // Función para registrar una auditoría de actualización
+  const createAuditLog = async (originalData, updatedData) => {
+    const careerAuditData = {
+      careerId: id,
+      oldCareerName: originalData.careerName,
+      actualCareerName: updatedData.careerName,
+      oldDepartmentId: originalData.departmentId,
+      actualDepartmentId: updatedData.departmentId,
+      action: 'Update',
+      userID: JSON.parse(sessionStorage.userData).userId,
+    };
+
+    try {
+      const response = await fetch('https://localhost:7103/api/CareerAudits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(careerAuditData),
+      });
+
+      if (!response.ok) {
+        console.error('Error al agregar CareerAudit');
+      }
+    } catch (error) {
+      console.error('Error al registrar la auditoría: ', error);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Obtén los datos actuales de la carrera antes de la actualización
+    const responseBeforeUpdate = await fetch(`https://localhost:7103/api/Careers/${id}`);
+    const dataBeforeUpdate = await responseBeforeUpdate.json();
 
     const updatedData = {
       careerId: id,
@@ -44,8 +87,14 @@ function Update() {
     });
 
     if (response.ok) {
-      window.alert('Carrera actualizada con éxito');
-      window.location.href = '/Careers';
+      // Obtén los datos actualizados de la carrera después de la actualización
+      const responseAfterUpdate = await fetch(`https://localhost:7103/api/Careers/${id}`);
+      const dataAfterUpdate = await responseAfterUpdate.json();
+
+      // Registra una auditoría de actualización
+      createAuditLog(dataBeforeUpdate, dataAfterUpdate);
+
+      handleShowInfoModal();
     } else {
       console.error('Error al actualizar la carrera');
     }
@@ -59,8 +108,7 @@ function Update() {
           <form className='col-md-5 mx-5' onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="careerName">Nombre de la carrera:</label>
-              <input
-                required
+              <input required
                 type="text"
                 className="form-control"
                 id="careerName"
@@ -71,8 +119,7 @@ function Update() {
 
             <div className="form-group">
               <label htmlFor="departmentId">Departamento:</label>
-              <select
-                required
+              <select required
                 className="form-control"
                 id="departmentId"
                 value={departmentId}
@@ -95,6 +142,20 @@ function Update() {
           </div>
         </div>
       </div>
+
+      <Modal show={showInfoModal} onHide={handleCloseInfoModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Información</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Carrera actualizada con éxito.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleCloseInfoModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

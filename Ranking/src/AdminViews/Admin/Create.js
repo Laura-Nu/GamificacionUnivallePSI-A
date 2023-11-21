@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Styles/App.css';
 import info3 from '../../images/info_3.png';
@@ -11,10 +12,12 @@ function Create() {
   const [secondLastName, setSecondLastName] = useState('');
   const [academicUnityId, setAcademicUnityId] = useState('');
   const [careerId, setCareerId] = useState('');
-  const [email, setEmail] = useState('');
-  const [expireDateAdmin, setExpireDateAdmin] = useState(null);
+  const [user, setUser] = useState('');
+  const [expireDateAdmin, setExpireDateAdmin] = useState(); // Valor por defecto para la fecha
+  const [selectedRole, setSelectedRole] = useState('');
   const [academicUnitOptions, setAcademicUnitOptions] = useState([]);
   const [careerOptions, setCareerOptions] = useState([]);
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     fetch('https://localhost:7103/api/AcademicUnities')
@@ -31,6 +34,35 @@ function Create() {
   const handleDateChange = (date) => {
     setExpireDateAdmin(date);
   };
+
+  const handleShowInfoModal = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleCloseInfoModal = () => {
+    setShowInfoModal(false);
+    window.location.href = '/Admins';
+  };
+
+  const handleBlur = () => {
+    generateUser();
+  };
+
+  const handleRoleChange = (event) => {
+    setSelectedRole(event.target.value);
+  };
+
+  const generateUser = () => {
+    if (firstName && lastName) {
+      let emailPrefix = `${firstName.charAt(0)}${lastName}`;
+      if (secondLastName) {
+        emailPrefix += secondLastName.charAt(0);
+      }
+      const user = emailPrefix.toLowerCase();
+      setUser(user);
+    }
+  };
+
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -49,14 +81,14 @@ function Create() {
       secondLastName: secondLastName,
       academicUnityId: academicUnity.academicUnityId,
       careerId: career.careerId,
-      email: email,
+      email: user + '@univalle.edu',
       status: 1,
-      role: 'Admin',
-      username: firstName,
-      password: 'pass',
+      role: selectedRole,
+      username: user,
+      password: user,
       expireDateAdmin: expireDateAdmin,
     };
-
+    console.log(newAdmin);
     const response = await fetch('https://localhost:7103/api/User/create-user', {
       method: 'POST',
       headers: {
@@ -66,55 +98,68 @@ function Create() {
     });
 
     if (response.ok) {
-      window.alert('Administrador agregado con éxito');
-      window.location.href = '/Admins';
+      handleShowInfoModal();
     } else {
       console.error('Error al agregar el administrador', await response.text());
     }
   };
 
+  // Filtra las opciones de Academic Units y Careers
+  const filteredAcademicUnitOptions = academicUnitOptions.filter(
+    (option) => option.status === 1
+  );
+  const filteredCareerOptions = careerOptions.filter(
+    (option) => option.status === 1
+  );
+
   return (
     <div className="App bg-green">
-      <h2 className='mx-3 p-3'>Añadir Administradores</h2>
+      <h2 className='p-2 text-center font-weight-bold'>Añadir Administradores</h2>
       <div className="App-header d-block">
         <div className='row mx-5 p-5'>
           <form className='col-md-5 mx-5' onSubmit={handleSubmit}>
             <div className="form-group">
               <label htmlFor="firstName">Nombre:</label>
-              <input
-                required
+              <input required
                 type="text"
                 className="form-control border-success border-3 rounded-4"
                 id="firstName"
                 value={firstName}
-                onChange={(e) => setFirstName(e.target.value)}
+                onChange={(e) => {
+                  setFirstName(e.target.value);
+                }}
+                onBlur={handleBlur}
               />
             </div>
-            <div>
-              <label htmlFor="lastName" className="form-label">Primer Apellido:</label>
-              <input
-                required
+            <div className="form-group">
+              <label htmlFor="lastName">Primer Apellido:</label>
+              <input required
                 type="text"
                 className="form-control border-success border-3 rounded-4"
                 id="lastName"
                 value={lastName}
-                onChange={(e) => setLastName(e.target.value)}
+                onChange={(e) => {
+                  setLastName(e.target.value);
+                }}
+                onBlur={handleBlur}
               />
             </div>
-            <div>
+            <div className="form-group">
               <label htmlFor="secondLastName">Segundo Apellido:</label>
               <input
                 type="text"
                 className="form-control border-success border-3 rounded-4"
                 id="secondLastName"
                 value={secondLastName}
-                onChange={(e) => setSecondLastName(e.target.value)}
+                onChange={(e) => {
+                  setSecondLastName(e.target.value);
+                }}
+                onBlur={handleBlur}
               />
             </div>
-            <div>
-              <label htmlFor="academicUnityId">Unidad Académica</label>
-              <select
-                required
+            <div className="form-group">
+              <label htmlFor="academicUnityId">Sede</label>
+              <select required
                 className="form-select border-success border-3 rounded-4"
                 aria-label="Selecciona una Unidad Académica"
                 id="academicUnityId"
@@ -122,17 +167,16 @@ function Create() {
                 onChange={(e) => setAcademicUnityId(e.target.value)}
               >
                 <option value="" disabled>Selecciona una opción</option>
-                {academicUnitOptions.map((option) => (
+                {filteredAcademicUnitOptions.map((option) => (
                   <option key={option.academicUnityId} value={option.academicUnityName}>
                     {option.academicUnityName}
                   </option>
                 ))}
               </select>
             </div>
-            <div>
+            <div className="form-group">
               <label htmlFor="careerId">Carrera</label>
-              <select
-                required
+              <select required
                 className="form-select border-success border-3 rounded-4"
                 aria-label="Selecciona una Carrera"
                 id="careerId"
@@ -140,7 +184,7 @@ function Create() {
                 onChange={(e) => setCareerId(e.target.value)}
               >
                 <option value="" disabled>Selecciona una opción</option>
-                {careerOptions.map((option) => (
+                {filteredCareerOptions.map((option) => (
                   <option key={option.careerId} value={option.careerName}>
                     {option.careerName}
                   </option>
@@ -148,16 +192,18 @@ function Create() {
               </select>
             </div>
             <div className="form-group">
-              <label htmlFor="email">Email:</label>
-              <input
-                required
-                type="email"
-                id="email"
-                name="email"
-                className="form-control border-success border-3 rounded-4"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
+              <label htmlFor="role">Rol:</label>
+              <select required
+                className="form-select border-success border-3 rounded-4"
+                aria-label="Selecciona un rol"
+                id="role"
+                value={selectedRole}
+                onChange={handleRoleChange}
+              >
+                <option value="">Selecciona un rol</option>
+                <option value="Admin">Admin</option>
+                <option value="Master">Master</option>
+              </select>
             </div>
             <div className="form-group">
               <label htmlFor="expireDateAdmin">Fecha:</label>
@@ -175,6 +221,20 @@ function Create() {
           </div>
         </div>
       </div>
+
+      <Modal show={showInfoModal} onHide={handleCloseInfoModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Información</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Administrador creado con éxito.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleCloseInfoModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

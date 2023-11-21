@@ -36,6 +36,51 @@
   }
 
   .thumbnail-cell {
-    width: 100px; /* Establece el ancho deseado para la miniatura */
-    height: 100px; /* Establece la altura deseada para la miniatura */
+    width: 100px;
+    height: 100px;
+  }
+
+  .button-container {
+    display: flex;
+    gap: 10px;
+  }
+  
+  .btn-bronze {
+    background-color: #CD7F32;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+
+  .btn-silver {
+    background-color: #C0C0C0;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+
+  .btn-gold {
+    background-color: #ffd700;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+
+  .btn-platinum {
+    background-color: #dcdbdb;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+  }
+
+  .btn-diamond {
+    background-color: #8eddef;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
   }

@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Styles/App.css';
 import info3 from '../../images/info_3.png';
+import Rank from '../../Controllers/Rank';
 
 function UpdateStudent() {
   const { id } = useParams();
@@ -13,15 +15,18 @@ function UpdateStudent() {
     academicUnityId: '',
     careerId: '',
     email: '',
-    student:{
+    student: {
       rank: '',
-      score: '',
-    }
+      score: 0, // Inicializado en 0
+    },
   });
   const [academicUnitOptions, setAcademicUnitOptions] = useState([]);
   const [careerOptions, setCareerOptions] = useState([]);
+  const [fullRank, setFullRank] = useState('');
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
+    // Obtén los datos del estudiante antes de la actualización
     fetch(`https://localhost:7103/api/People/${id}`)
       .then((response) => response.json())
       .then((data) => {
@@ -40,30 +45,92 @@ function UpdateStudent() {
       .catch((error) => console.error('Error fetching careers: ', error));
   }, [id]);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
+  const handleShowInfoModal = () => {
+    setShowInfoModal(true);
+  };
 
-    const updatedStudent = { ...studentData };
+  const handleCloseInfoModal = () => {
+    setShowInfoModal(false);
+    window.location.href = '/Students';
+  };
 
-    const response = await fetch(`https://localhost:7103/api/People/${id}`, {
-      method: 'PUT',
+  const createAuditLog = (dataBeforeUpdate) => {
+    // Crear un objeto de auditoría para la actualización
+    const auditData = {
+      personId: id, // ID del estudiante
+      oldScore: dataBeforeUpdate.student.score, // Puntaje anterior
+      actualScore: studentData.student.score, // Puntaje actualizado
+      oldRank: dataBeforeUpdate.student.rank, // Rango anterior
+      actualRank: studentData.student.rank, // Rango actualizado
+      action: 'Update', // Acción de auditoría para la actualización
+      userID: JSON.parse(sessionStorage.userData).userId,
+    };
+
+    // Envía los datos de auditoría a un endpoint de API para su registro
+    fetch('https://localhost:7103/api/StudentAudits', {
+      method: 'POST',
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify(updatedStudent),
-    });
+      body: JSON.stringify(auditData),
+    })
+      .then((response) => {
+        if (response.ok) {
+          console.log('Registro de auditoría creado con éxito');
+        } else {
+          console.error('Error al crear el registro de auditoría', response);
+        }
+      })
+      .catch((error) => {
+        console.error('Error al crear el registro de auditoría', error);
+      });
+  };
 
-    if (response.ok) {
-      window.alert('Estudiante actualizado con éxito');
-      window.location.href = '/Students';
-    } else {
-      console.error('Error al actualizar el estudiante', await response.text());
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    const rankInstance = new Rank({ score: studentData.student.score });
+    const { fullRank } = rankInstance.GetRank();
+    setFullRank(fullRank);
+
+    var updatedStudent = { ...studentData };
+    updatedStudent.student.rank = fullRank;
+
+    try {
+      // Obtén los datos del estudiante antes de la actualización
+      const responseBeforeUpdate = await fetch(`https://localhost:7103/api/People/${id}`);
+      const dataBeforeUpdate = await responseBeforeUpdate.json();
+
+      // Realiza la actualización de los datos del estudiante
+      const response = await fetch(`https://localhost:7103/api/People/${id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedStudent),
+      });
+
+      if (response.ok) {
+        createAuditLog(dataBeforeUpdate); // Llama a la función para crear la auditoría
+        handleShowInfoModal();
+      } else {
+        console.error('Error al actualizar el estudiante', await response.text());
+      }
+    } catch (error) {
+      console.error('Error al obtener los datos antes de la actualización', error);
     }
   };
 
+  // Filtra las opciones de Academic Units y Careers
+  const filteredAcademicUnitOptions = academicUnitOptions.filter(
+    (option) => option.status === 1
+  );
+  const filteredCareerOptions = careerOptions.filter(
+    (option) => option.status === 1
+  );
+
   return (
     <div className="App bg-green">
-      <h2 className='mx-3 p-3'>Actualizar Estudiante</h2>
+      <h2 className='p-2 text-center font-weight-bold'>Actualizar Estudiante</h2>
       <div className="App-header d-block">
         <div className='row mx-5 p-5'>
           <form className='col-md-5 mx-5' onSubmit={handleSubmit}>
@@ -101,7 +168,7 @@ function UpdateStudent() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="academicUnityId">Unidad Académica</label>
+              <label htmlFor="academicUnityId">Sede</label>
               <select
                 className="form-select border-success border-3 rounded-4"
                 id="academicUnityId"
@@ -110,7 +177,7 @@ function UpdateStudent() {
                 onChange={(e) => setStudentData({ ...studentData, academicUnityId: e.target.value })}
               >
                 <option value="" disabled>Selecciona una opción</option>
-                {academicUnitOptions.map((option) => (
+                {filteredAcademicUnitOptions.map((option) => (
                   <option key={option.academicUnityId} value={option.academicUnityId}>
                     {option.academicUnityName}
                   </option>
@@ -119,7 +186,7 @@ function UpdateStudent() {
             </div>
             <div className="form-group">
               <label htmlFor="careerId">Carrera</label>
-              <select
+              <select required
                 className="form-select border-success border-3 rounded-4"
                 id="careerId"
                 name="careerId"
@@ -127,7 +194,7 @@ function UpdateStudent() {
                 onChange={(e) => setStudentData({ ...studentData, careerId: e.target.value })}
               >
                 <option value="" disabled>Selecciona una opción</option>
-                {careerOptions.map((option) => (
+                {filteredCareerOptions.map((option) => (
                   <option key={option.careerId} value={option.careerId}>
                     {option.careerName}
                   </option>
@@ -146,19 +213,8 @@ function UpdateStudent() {
               />
             </div>
             <div className="form-group">
-              <label htmlFor="rank">Rango:</label>
-              <input
-                className="form-control border-success border-3 rounded-4"
-                type="text"
-                id="rank"
-                name="rank"
-                value={studentData.student.rank}
-                onChange={(e) => setStudentData({ ...studentData, student: { ...studentData.student, rank: e.target.value } })}
-              />
-            </div>
-            <div className="form-group">
               <label htmlFor="score">Puntaje:</label>
-              <input
+              <input required
                 className="form-control border-success border-3 rounded-4"
                 type="number"
                 id="score"
@@ -174,6 +230,20 @@ function UpdateStudent() {
           </div>
         </div>
       </div>
+
+      <Modal show={showInfoModal} onHide={handleCloseInfoModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Información</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Estudiante actualizado con éxito.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleCloseInfoModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 }

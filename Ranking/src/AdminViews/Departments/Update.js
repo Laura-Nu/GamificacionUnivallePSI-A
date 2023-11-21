@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { Button, Modal } from 'react-bootstrap';
 import { useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import '../../Styles/App.css';
@@ -7,8 +8,8 @@ function Update() {
   const { id } = useParams();
   const [departmentName, setDepartmentName] = useState('');
   const [facultyId, setFacultyId] = useState('');
-
   const [faculties, setFaculties] = useState({});
+  const [showInfoModal, setShowInfoModal] = useState(false);
 
   useEffect(() => {
     fetch(`https://localhost:7103/api/Departments/${id}`)
@@ -25,7 +26,8 @@ function Update() {
       .then((response) => response.json())
       .then((data) => {
         const facultyMap = {};
-        data.forEach((faculty) => {
+        data.filter((faculty) => faculty.status === 1)
+        .forEach((faculty) => {
           facultyMap[faculty.facultyId] = faculty.facultyName;
         });
         setFaculties(facultyMap);
@@ -33,8 +35,50 @@ function Update() {
       .catch((error) => console.error('Error fetching faculties: ', error));
   }, []);
 
+  const handleShowInfoModal = () => {
+    setShowInfoModal(true);
+  };
+
+  const handleCloseInfoModal = () => {
+    setShowInfoModal(false);
+    window.location.href = '/Departments';
+  };
+
+  // Función para registrar una auditoría de actualización
+  const createAuditLog = async (originalData, updatedData) => {
+    const departmentAuditData = {
+      departmentId: id,
+      oldDepartmentName: originalData.departmentName,
+      actualDepartmentName: updatedData.departmentName,
+      oldFacultyId: originalData.facultyId,
+      actualFacultyId: updatedData.facultyId,
+      action: 'Update',
+      userID: JSON.parse(sessionStorage.userData).userId,
+    };
+
+    try {
+      const response = await fetch('https://localhost:7103/api/DepartmentAudits', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(departmentAuditData),
+      });
+
+      if (!response.ok) {
+        console.error('Error al agregar DepartmentAudit');
+      }
+    } catch (error) {
+      console.error('Error al registrar la auditoría: ', error);
+    }
+  };
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    // Obtén los datos actuales del departamento antes de la actualización
+    const responseBeforeUpdate = await fetch(`https://localhost:7103/api/Departments/${id}`);
+    const dataBeforeUpdate = await responseBeforeUpdate.json();
 
     const updatedData = {
       departmentId: id,
@@ -51,8 +95,14 @@ function Update() {
     });
 
     if (response.ok) {
-      window.alert('Departamento actualizado con éxito');
-      window.location.href = '/Departments';
+      // Obtén los datos actualizados del departamento después de la actualización
+      const responseAfterUpdate = await fetch(`https://localhost:7103/api/Departments/${id}`);
+      const dataAfterUpdate = await responseAfterUpdate.json();
+
+      // Registra una auditoría de actualización
+      createAuditLog(dataBeforeUpdate, dataAfterUpdate);
+
+      handleShowInfoModal();
     } else {
       console.error('Error al actualizar el departamento');
     }
@@ -60,7 +110,7 @@ function Update() {
 
   return (
     <div className="App bg-green">
-      <h2 className="font-weight-bold text-center">Actualizar Departamento</h2>
+      <h2 className='p-2 text-center font-weight-bold'>Actualizar Departamento</h2>
       <div className="App-header">
         <div className="container">
         <div className="row">
@@ -68,8 +118,7 @@ function Update() {
             <form onSubmit={handleSubmit}>
               <div className="form-group">
                 <label htmlFor="departmentName">Nombre del Departamento:</label>
-                <input
-                  required
+                <input required
                   type="text"
                   className="form-control"
                   id="departmentName"
@@ -80,8 +129,7 @@ function Update() {
 
               <div className="form-group">
                 <label htmlFor="facultyId">Facultad:</label>
-                <select
-                  required
+                <select required
                   className="form-control"
                   id="facultyId"
                   value={facultyId}
@@ -101,6 +149,21 @@ function Update() {
           </div>
         </div>
       </div>
+
+      <Modal show={showInfoModal} onHide={handleCloseInfoModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Información</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          Departamento actualizado con éxito.
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="success" onClick={handleCloseInfoModal}>
+            Cerrar
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
     </div>
   );
 }
