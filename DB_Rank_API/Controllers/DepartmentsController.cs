@@ -64,7 +64,7 @@ namespace DB_Rank_API.Controllers
             if (existingDepartment != null)
             {
                 department.RegisterDate = existingDepartment.RegisterDate;
-                department.Status = existingDepartment.Status;
+                //department.Status = existingDepartment.Status;
                 _context.Entry(existingDepartment).CurrentValues.SetValues(department);
             }
 

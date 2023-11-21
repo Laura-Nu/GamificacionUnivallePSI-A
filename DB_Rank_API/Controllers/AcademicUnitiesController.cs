@@ -64,7 +64,7 @@ namespace DB_Rank_API.Controllers
             if (existingAcademicUnity != null)
             {
                 academicUnity.RegisterDate = existingAcademicUnity.RegisterDate;
-                academicUnity.Status = existingAcademicUnity.Status;
+                //academicUnity.Status = existingAcademicUnity.Status;
                 _context.Entry(existingAcademicUnity).CurrentValues.SetValues(academicUnity);
             }
 

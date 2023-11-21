@@ -65,7 +65,7 @@ namespace DB_Rank_API.Controllers
             if (existingBadge != null)
             {
                 badge.RegisterDate = existingBadge.RegisterDate;
-                badge.Status = existingBadge.Status;
+                //badge.Status = existingBadge.Status;
                 _context.Entry(existingBadge).CurrentValues.SetValues(badge);
             }
 

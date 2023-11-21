@@ -64,7 +64,7 @@ namespace DB_Rank_API.Controllers
             if (existingSanction != null)
             {
                 sanction.RegisterDate = existingSanction.RegisterDate;
-                sanction.Status = existingSanction.Status;
+                //sanction.Status = existingSanction.Status;
                 _context.Entry(existingSanction).CurrentValues.SetValues(sanction);
             }
 

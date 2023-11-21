@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using DB_Rank_API.Models.AuditModels;
+using System;
 using System.Collections.Generic;
 
 namespace DB_Rank_API.Models;
@@ -17,5 +19,6 @@ public partial class Career
 
     public virtual Department? Department { get; set; }
 
-    public virtual ICollection<Person> People { get; set; } = new List<Person>();
+    public virtual ICollection<Person>? People { get; set; }
+    public virtual ICollection<CareerAudit>? CareerAudits { get; set; }
 }

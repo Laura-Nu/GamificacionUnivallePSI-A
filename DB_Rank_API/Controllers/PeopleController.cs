@@ -56,46 +56,6 @@ namespace DB_Rank_API.Controllers
 
         // PUT: api/People/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
-        /*
-        [HttpPut("{id}")]
-        public async Task<IActionResult> PutPerson(int id, Person person)
-        {
-            var studentData = _context.People.Include(p => p.Student).FirstOrDefault(p => p.PersonId == id);
-
-            if (id != person.PersonId)
-            {
-                return BadRequest();
-            }
-
-            var existingPerson = await _context.People.FindAsync(id);
-
-            if (existingPerson != null)
-            {
-                person.RegisterDate = existingPerson.RegisterDate;
-                person.Status = existingPerson.Status;
-                _context.Entry(existingPerson).CurrentValues.SetValues(person);
-            }
-
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateConcurrencyException)
-            {
-                if (!PersonExists(id))
-                {
-                    return NotFound();
-                }
-                else
-                {
-                    throw;
-                }
-            }
-
-            return NoContent();
-        }
-        */
-
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPerson(int id, Person updatedPerson)
         {
@@ -105,7 +65,7 @@ namespace DB_Rank_API.Controllers
             }
 
             var existingPerson = await _context.People
-                .Include(p => p.Student) // Asegúrate de incluir la relación con Student
+                .Include(p => p.Student)
                 .FirstOrDefaultAsync(p => p.PersonId == id);
 
             if (existingPerson == null)
@@ -113,27 +73,18 @@ namespace DB_Rank_API.Controllers
                 return NotFound();
             }
 
-            // Actualiza los campos de Person
-            existingPerson.FirstName = updatedPerson.FirstName;
-            existingPerson.LastName = updatedPerson.LastName;
-            existingPerson.SecondLastName = updatedPerson.SecondLastName;
-            // ... otros campos de Person
-
-            // Actualiza los campos de Student
-            if (existingPerson.Student != null)
+            if (existingPerson.Role == "Student" && existingPerson.Student != null)
             {
                 existingPerson.Student.Rank = updatedPerson.Student.Rank;
                 existingPerson.Student.Score = updatedPerson.Student.Score;
             }
-            else
-            {
-                // Si Student es nulo, puedes crear una nueva instancia
-                existingPerson.Student = new Student
-                {
-                    Rank = updatedPerson.Student.Rank,
-                    Score = updatedPerson.Student.Score
-                };
-            }
+
+            updatedPerson.RegisterDate = existingPerson.RegisterDate;
+            //updatedPerson.Status = existingPerson.Status;
+            updatedPerson.Password = existingPerson.Password;
+            updatedPerson.Username = existingPerson.Username;
+            updatedPerson.Role = existingPerson.Role;
+            _context.Entry(existingPerson).CurrentValues.SetValues(updatedPerson);
 
             try
             {

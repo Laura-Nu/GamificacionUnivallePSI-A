@@ -64,7 +64,7 @@ namespace DB_Rank_API.Controllers
             if (existingFaculty != null)
             {
                 faculty.RegisterDate = existingFaculty.RegisterDate;
-                faculty.Status = existingFaculty.Status;
+                //faculty.Status = existingFaculty.Status;
                 _context.Entry(existingFaculty).CurrentValues.SetValues(faculty);
             }
 

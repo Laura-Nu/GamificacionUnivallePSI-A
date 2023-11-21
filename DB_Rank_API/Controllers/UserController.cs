@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using BCrypt.Net;
+using Microsoft.EntityFrameworkCore;
 
 namespace DB_Rank_API.Controllers
 {
@@ -17,6 +18,30 @@ namespace DB_Rank_API.Controllers
         public UserController(BdrankingContext context)
         {
             _context = context;
+        }
+
+        [HttpPost("change-password")]
+        public IActionResult ChangePassword([FromBody] ChangePasswordRequest request)
+        {
+            // Verificar la identidad del usuario (debes implementar esto según tu lógica)
+            var user = _context.People.SingleOrDefault(p => p.PersonId == request.UserId);
+
+            if (user == null)
+            {
+                return NotFound("Usuario no encontrado");
+            }
+
+            // Verificar la contraseña actual del usuario
+            if (!BCrypt.Net.BCrypt.Verify(request.CurrentPassword, user.Password))
+            {
+                return BadRequest("La contraseña actual es incorrecta");
+            }
+
+            // Hashear y almacenar la nueva contraseña
+            user.Password = BCrypt.Net.BCrypt.HashPassword(request.NewPassword);
+            _context.SaveChanges();
+
+            return Ok("Contraseña cambiada exitosamente");
         }
 
         // POST: api/User
@@ -40,14 +65,13 @@ namespace DB_Rank_API.Controllers
                         Role = request.Role,
                         Email = request.Email,
                         Username = request.Username,
-                        ExpireDateAdmin = request.ExpireDateAdmin,
 
                         Password = BCrypt.Net.BCrypt.HashPassword(request.Password),
 
                         Student = new Student
                         {
-                            Rank = "Bronce",
-                            Score = 0
+                            Rank = request.Student.Rank,
+                            Score = request.Student.Score
                         },
                     };
                 }

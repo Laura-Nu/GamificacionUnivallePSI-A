@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DB_Rank_API.Models.AuditModels;
+using System;
 using System.Collections.Generic;
 
 namespace DB_Rank_API.Models;
@@ -13,5 +14,8 @@ public partial class AcademicUnity
 
     public DateTime RegisterDate { get; set; } = DateTime.Now;
 
-    public virtual ICollection<Person> People { get; set; } = new List<Person>();
+    public virtual ICollection<Person>? People { get; set; }
+
+    public virtual ICollection<AcademicUnityAudit>? AcademicUnityAudits { get; set; }
+
 }

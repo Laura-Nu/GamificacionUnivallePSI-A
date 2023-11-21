@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\launu\\OneDrive\\Escritorio\\Integrar PSI\\DB_Rank_API\\DB_Rank_API.csproj": {}
+    "C:\\Users\\launu\\OneDrive\\Escritorio\\VAGamificacion\\DB_Rank_API\\DB_Rank_API.csproj": {}
   },
   "projects": {
-    "C:\\Users\\launu\\OneDrive\\Escritorio\\Integrar PSI\\DB_Rank_API\\DB_Rank_API.csproj": {
+    "C:\\Users\\launu\\OneDrive\\Escritorio\\VAGamificacion\\DB_Rank_API\\DB_Rank_API.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\launu\\OneDrive\\Escritorio\\Integrar PSI\\DB_Rank_API\\DB_Rank_API.csproj",
+        "projectUniqueName": "C:\\Users\\launu\\OneDrive\\Escritorio\\VAGamificacion\\DB_Rank_API\\DB_Rank_API.csproj",
         "projectName": "DB_Rank_API",
-        "projectPath": "C:\\Users\\launu\\OneDrive\\Escritorio\\Integrar PSI\\DB_Rank_API\\DB_Rank_API.csproj",
+        "projectPath": "C:\\Users\\launu\\OneDrive\\Escritorio\\VAGamificacion\\DB_Rank_API\\DB_Rank_API.csproj",
         "packagesPath": "C:\\Users\\launu\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\launu\\OneDrive\\Escritorio\\Integrar PSI\\DB_Rank_API\\obj\\",
+        "outputPath": "C:\\Users\\launu\\OneDrive\\Escritorio\\VAGamificacion\\DB_Rank_API\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -71,6 +71,10 @@
             "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
               "target": "Package",
               "version": "[6.0.16, )"
+            },
+            "OfficeOpenXml.Core.ExcelPackage": {
+              "target": "Package",
+              "version": "[1.0.0, )"
             },
             "Swashbuckle.AspNetCore": {
               "target": "Package",

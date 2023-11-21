@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using DB_Rank_API.Models.AuditModels;
+using System;
 using System.Collections.Generic;
 using System.Text.Json.Serialization;
 
@@ -15,7 +17,10 @@ public partial class Student
     [JsonIgnore]
     public virtual Person? Person { get; set; }
 
-    //public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
+    public virtual ICollection<Badge>? Badges { get; set; }
 
-    //public virtual ICollection<Sanction> Sanctions { get; set; } = new List<Sanction>();
+    public virtual ICollection<Sanction>? Sanctions { get; set; }
+    public virtual ICollection<StudentAudit>? StudentAudits { get; set; }
+
+    //public virtual ICollection<Project> Projects { get; set; } = new List<Project>();
 }

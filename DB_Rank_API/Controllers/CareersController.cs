@@ -64,7 +64,7 @@ namespace DB_Rank_API.Controllers
             if (existingCareer != null)
             {
                 career.RegisterDate = existingCareer.RegisterDate;
-                career.Status = existingCareer.Status;
+                //career.Status = existingCareer.Status;
                 _context.Entry(existingCareer).CurrentValues.SetValues(career);
             }
 

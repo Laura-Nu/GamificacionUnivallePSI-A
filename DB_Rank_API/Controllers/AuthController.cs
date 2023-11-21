@@ -27,11 +27,23 @@ namespace DB_Rank_API.Controllers
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             // Realiza la validación de las credenciales del usuario en tu base de datos.
-            var user = await _dbContext.People.SingleOrDefaultAsync(p => p.Username == request.Username);
+            var user = await _dbContext.People
+                        .Include(p => p.AcademicUnity) // Incluir AcademicUnity
+                        .Include(p => p.Career) // Incluir Career
+                        .SingleOrDefaultAsync(p => p.Username == request.Username);
+            var currentDate = DateTime.Now;
 
             if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
             {
-                return BadRequest(new { message = "Credenciales inválidas" });
+                return BadRequest(new { message = "Credenciales inválidas." });
+            }
+
+            else if (user.ExpireDateAdmin != null && user.ExpireDateAdmin < currentDate)
+            {
+                user.Status = 0;
+                await _dbContext.SaveChangesAsync();
+
+                return BadRequest(new { message = "Acceso revocado." });
             }
 
             var claims = new List<Claim>
@@ -45,20 +57,31 @@ namespace DB_Rank_API.Controllers
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
             var principal = new ClaimsPrincipal(identity);
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal);
+            var authProperties = new AuthenticationProperties
+            {
+                IsPersistent = false, // Puedes ajustar esto según tus necesidades
+            };
+
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                authProperties);
 
             return Ok(new
             {
                 message = "Inicio de sesión exitoso",
                 user = new
                 {
+                    UserId = user.PersonId,
                     Username = user.Username,
                     FirstName = user.FirstName,
                     LastName = user.LastName,
                     SecondLastName = user.SecondLastName,
                     Role = user.Role, // Esto se basa en el Claim anterior
                     Rank = GetStudentRank(user.PersonId),
-                    Score = user.Student?.Score
+                    Score = user.Student?.Score,
+                    headquarter = user.AcademicUnityId,
+                    career = user.CareerId
                 }
             });
         }

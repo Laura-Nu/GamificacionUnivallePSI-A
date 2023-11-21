@@ -1,4 +1,6 @@
-﻿using System;
+﻿
+using DB_Rank_API.Models.AuditModels;
+using System;
 using System.Collections.Generic;
 
 namespace DB_Rank_API.Models;
@@ -13,5 +15,8 @@ public partial class Faculty
 
     public DateTime RegisterDate { get; set; } = DateTime.Now;
 
-    public virtual ICollection<Department> Departments { get; set; } = new List<Department>();
+    public virtual ICollection<Department>? Departments { get; set; }
+
+    public virtual ICollection<FacultyAudit>? FacultyAudits { get; set; }
+
 }
