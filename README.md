@@ -1,6 +1,9 @@
 # PSI-GamificacionUnivalle
               Manual Técnico – Gamificación
 
+CONTRASEÑAS:
+Admin: fmelgarejos contraseña: 12345
+Master: rquiroga  contraseña: rquiroga
 
 1.	Introducción:
 
