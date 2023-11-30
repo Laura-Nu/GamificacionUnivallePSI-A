@@ -2,7 +2,7 @@
               Manual Técnico – Gamificación
 
 CONTRASEÑAS:
-Admin: fmelgarejos contraseña: 12345
+Admin: rsuarez contraseña: rsuarez
 Master: rquiroga  contraseña: rquiroga
 
 1.	Introducción:
