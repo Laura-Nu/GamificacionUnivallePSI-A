@@ -8,6 +8,10 @@ Master: rquiroga  contraseña: rquiroga
 -------------YOUTUBE ----------------
 https://www.youtube.com/watch?v=ILgTY5VocZM
 ---------------------------------------
+--------- DOCKER ----------------
+https://drive.google.com/file/d/1Rs9VhXdg3cwhIsiqwxb8QmGTckm5ziib/view
+----------------------------
+
 1.	Introducción:
 
 La aplicación de Ranking Estudiantil es un proyecto desarrollado para llevar un conteo de los logros y méritos académicos obtenidos por estudiantes universitarios. Mediante una interfaz web, permite la administración de los perfiles e insignias de cada alumno, así como la generación de reportes y el reconocimiento de los estudiantes más destacados. Este documento detalla los aspectos técnicos más relevantes del sistema, incluyendo decisiones de arquitectura, tecnologías utilizadas, requerimientos, despliegue e información técnica de soporte. Está dirigido a los desarrolladores y personal de TI involucrados en el mantenimiento, hospedaje y futuro desarrollo sobre esta plataforma web.
